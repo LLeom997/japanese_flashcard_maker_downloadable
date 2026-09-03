@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japanese Vocabulary Flashcards</title>
+<style>
+  @page { size: A4 portrait; margin: 8mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; margin: 0; background:#f3f3f3; color:#222; }
+  .app { max-width: 1100px; margin: 24px auto; padding: 20px; }
+  h1 { margin:0 0 8px; }
+  .sub { color:#666; margin-bottom:18px; }
+  textarea {
+    width:100%; min-height:220px; padding:12px; border:1px solid #bbb;
+    border-radius:8px; font-family:monospace; font-size:14px;
+  }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin:12px 0; }
+  button {
+    padding:10px 16px; border:0; border-radius:7px; cursor:pointer;
+    background:#222; color:#fff; font-weight:600;
+  }
+  button.secondary { background:#ddd; color:#222; }
+  .hint { font-size:13px; color:#666; margin:8px 0 20px; }
+  #preview { display:flex; flex-direction:column; gap:18px; }
+  .sheet {
+    width:210mm; min-height:297mm; background:#fff; padding:8mm;
+    display:grid; grid-template-columns:repeat(2,1fr);
+    grid-template-rows:repeat(5,1fr); gap:0;
+    box-shadow:0 2px 12px #bbb;
+  }
+  .card {
+    border:1px dashed #888; display:flex; align-items:center;
+    justify-content:center; text-align:center; padding:10mm;
+    overflow:hidden; position:relative;
+  }
+  .front .english { font-size:42px; font-weight:700; line-height:1.15; }
+  .back { flex-direction:column; gap:7px; }
+  .kana { font-size:28px; font-weight:700; }
+  .katakana { font-size:20px; color:#555; }
+  .romaji { font-size:18px; font-style:italic; }
+  .kanji { font-size:42px; }
+  .label { font-size:10px; color:#999; text-transform:uppercase; letter-spacing:1px; }
+  .back-content { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .back-row { font-size:24px; line-height:1.15; }
+  .creator { position:absolute; bottom:4mm; left:0; right:0; text-align:center;
+    font-size:9px; letter-spacing:2px; color:#999; font-weight:600; }
+  .empty { border-color:transparent; }
+  @media print {
+    body { background:#fff; }
+    .app > :not(#preview), h1, .sub { display:none !important; }
+    #preview { gap:0; }
+    .sheet { box-shadow:none; page-break-after:always; }
+    .sheet:last-child { page-break-after:auto; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>🇯🇵 Japanese Vocabulary Flashcards</h1>
+  <div class="sub">Paste your CSV → generate A4 double-sided flashcards → print.</div>
+
+  <textarea id="csv" placeholder="Paste your vocabulary like this:
+I / me	わたし / 私 / watashi
+you	あなた / あなた / anata
+person	ひと / 人 / hito
+friend	ともだち / 友達 / tomodachi
+
+One vocabulary item per line:
+English<TAB>Hiragana / Katakana / Kanji / Romaji"></textarea>
+
+  <div class="controls">
+    <button onclick="generate()">Generate Flashcards</button>
+    <button class="secondary" onclick="window.print()">Print / Save PDF</button>
+    <button class="secondary" onclick="document.getElementById('csv').value='';document.getElementById('preview').innerHTML=''">Clear</button>
+  </div>
+
+  <div class="hint">
+    Paste <b>English[TAB]Japanese / Japanese / Romaji</b>, one item per line.
+    Print setting: <b>A4 • Portrait • 100% / Actual size • Double-sided • Flip on long edge</b>.
+    Front = English; back = Japanese.
+  </div>
+
+  <div id="preview"></div>
+</div>
+
+<script>
+function parseVocabulary(text) {
+  const rows = [];
+  text.split(/\r?\n/).forEach(line => {
+    if (!line.trim()) return;
+
+    // Column 1 = English. Column 2 = EVERYTHING after the first TAB.
+    // The slash "/" is content inside column 2 and means the next item
+    // should be displayed on the next row on the card.
+    const tab = line.indexOf("\t");
+    if (tab < 0) return;
+
+    const englishRaw = line.slice(0, tab).trim();
+    const column2 = line.slice(tab + 1).trim();
+    if (!englishRaw || !column2) return;
+
+    const tokens = column2.split(/\s*\/\s*/).map(x => x.trim()).filter(Boolean);
+
+    // Preserve every slash-separated token. We also classify them so
+    // kana/kanji/romaji can be displayed appropriately, without dropping
+    // duplicate or unfamiliar content.
+    let hira="", kata="", romaji="", kanji="";
+    const extra=[];
+
+    tokens.forEach(t => {
+      if (/^[ぁ-ゖー\s・]+$/.test(t) && !hira) hira=t;
+      else if (/^[ァ-ヺー\s・]+$/.test(t) && !kata) kata=t;
+      else if (/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'・-]*$/.test(t) && !romaji) romaji=t;
+      else if (/[\u3400-\u9FFF\uF900-\uFAFF]/.test(t) && !kanji) kanji=t;
+      else extra.push(t);
+    });
+
+    rows.push({
+      english: englishRaw.charAt(0).toUpperCase() + englishRaw.slice(1),
+      hira, kata, romaji, kanji, extra, rawColumn2: column2
+    });
+  });
+  return rows;
+}
+
+function normalize(s){ return (s||"").toLowerCase().replace(/[^a-z0-9]/g,""); }
+
+function generate(){
+  const text=document.getElementById("csv").value.trim();
+  if(!text){ alert("Paste your vocabulary first."); return; }
+
+  const data=parseVocabulary(text);
+  if(!data.length){ alert("No vocabulary found. Use: English<TAB>Hiragana / Kanji / Romaji"); return; }
+
+  const preview=document.getElementById("preview");
+  preview.innerHTML="";
+
+  // 10 cards per A4 sheet: 2 columns x 5 rows.
+  // For duplex printing, the back sheet is horizontally mirrored so each
+  // back aligns with its front when flipping on the long edge.
+  for(let start=0; start<data.length; start+=10){
+    const chunk=data.slice(start,start+10);
+
+    const front=document.createElement("div");
+    front.className="sheet";
+    chunk.forEach(d=>{
+      const c=document.createElement("div");
+      c.className="card front";
+      c.innerHTML=`<div class="english">${esc(d.english)}</div><div class="creator">MΛIRO</div>`;
+      front.appendChild(c);
+    });
+    while(front.children.length<10){
+      const e=document.createElement("div"); e.className="card empty"; front.appendChild(e);
+    }
+    preview.appendChild(front);
+
+    const back=document.createElement("div");
+    back.className="sheet";
+
+    // Mirror each 2-column row: [1,2] -> [2,1], [3,4] -> [4,3], etc.
+    const mirrored = [];
+    for(let i=0; i<chunk.length; i+=2){
+      if(i+1 < chunk.length) {
+        mirrored.push(chunk[i+1], chunk[i]);
+      } else {
+        mirrored.push(chunk[i]);
+      }
+    }
+
+    mirrored.forEach(d=>{
+      const c=document.createElement("div");
+      c.className="card back";
+      const allTokens = d.rawColumn2.split(/\s*\/\s*/).map(x=>x.trim()).filter(Boolean);
+      c.innerHTML=`
+        
+        <div class="back-content">
+          ${allTokens.map((t,i)=>`<div class="${i===0?'kana':'back-row'}">${esc(t)}</div>`).join("")}
+        </div>
+        <div class="creator">MΛIRO</div>
+      `;
+      back.appendChild(c);
+    });
+    while(back.children.length<10){
+      const e=document.createElement("div"); e.className="card empty"; back.appendChild(e);
+    }
+    preview.appendChild(back);
+  }
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+</script>
+</body>
+</html>
