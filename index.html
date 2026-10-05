@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Japanese Vocabulary Flashcards</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+  Japanese Vocabulary Flashcards
+</title>
+
 
 <style>
 
 /* =========================================================
-   PAGE SETUP
+   BASIC UI
    ========================================================= */
-
-@page {
-  size: A4 portrait;
-  margin: 0;
-}
 
 * {
   box-sizing: border-box;
@@ -33,14 +37,9 @@ body {
   color: #222;
 }
 
-
-/* =========================================================
-   APPLICATION UI
-   ========================================================= */
-
 .app {
   max-width: 1100px;
-  margin: 24px auto;
+  margin: 25px auto;
   padding: 20px;
 }
 
@@ -71,42 +70,11 @@ textarea {
 .controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-
   gap: 10px;
 
-  margin: 12px 0;
-}
+  align-items: center;
 
-button,
-select {
-  padding: 10px 16px;
-
-  border-radius: 7px;
-
-  cursor: pointer;
-
-  font-size: 14px;
-  font-weight: 600;
-}
-
-button {
-  border: 0;
-
-  background: #222;
-  color: #fff;
-}
-
-button.secondary {
-  background: #ddd;
-  color: #222;
-}
-
-select {
-  border: 1px solid #bbb;
-
-  background: #fff;
-  color: #222;
+  margin: 15px 0;
 }
 
 .control-group {
@@ -117,8 +85,41 @@ select {
 
 .control-group label {
   font-size: 13px;
-  color: #555;
   font-weight: 600;
+  color: #555;
+}
+
+button,
+select {
+  padding: 10px 15px;
+
+  border-radius: 7px;
+
+  border: 1px solid #bbb;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+button {
+  background: #222;
+  color: white;
+  border: none;
+  font-weight: 600;
+}
+
+button.secondary {
+  background: #ddd;
+  color: #222;
+}
+
+button.pdf {
+  background: #b00020;
+}
+
+select {
+  background: white;
 }
 
 .hidden {
@@ -126,9 +127,10 @@ select {
 }
 
 .hint {
-  margin: 8px 0 20px;
+  margin: 10px 0 20px;
 
   font-size: 13px;
+
   line-height: 1.5;
 
   color: #666;
@@ -141,111 +143,45 @@ select {
 
 #preview {
   display: flex;
-
   flex-direction: column;
 
   align-items: center;
 
-  gap: 20px;
+  gap: 25px;
 }
 
 
 /* =========================================================
-   PHYSICAL PAGE
-
-   IMPORTANT:
-
-   The page itself represents the entire paper.
-
-   The actual card grid is INSIDE the safe inset.
-
-   This avoids browser/printer clipping.
+   PREVIEW PAGE
    ========================================================= */
 
-.sheet {
+.preview-page {
 
-  --page-width: 210mm;
-  --page-height: 297mm;
-
-  --safe-top: 5mm;
-  --safe-right: 5mm;
-  --safe-bottom: 5mm;
-  --safe-left: 5mm;
-
-  width: var(--page-width);
-  height: var(--page-height);
-
-  /*
-    The page is a flex container so that
-    the card grid is centered both ways.
-  */
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  margin: 0;
-
-  padding: 0;
-
-  background: #fff;
-
-  overflow: hidden;
+  background: white;
 
   box-shadow:
-    0 2px 12px rgba(0,0,0,0.20);
+    0 3px 15px rgba(0,0,0,0.20);
 
-  border: none;
+  position: relative;
 
-  break-inside: avoid;
-  page-break-inside: avoid;
-
-  break-after: page;
-  page-break-after: always;
+  overflow: hidden;
 }
 
 
 /* =========================================================
-   ACTUAL CARD GRID
-
-   Width and height are explicitly smaller than paper.
-
-   This creates the print-safe area.
+   PREVIEW GRID
    ========================================================= */
 
-.sheet-grid {
+.preview-grid {
 
-  width:
-    calc(
-      var(--page-width)
-      - var(--safe-left)
-      - var(--safe-right)
-    );
-
-  height:
-    calc(
-      var(--page-height)
-      - var(--safe-top)
-      - var(--safe-bottom)
-    );
+  width: 100%;
+  height: 100%;
 
   display: grid;
-
-  grid-template-columns:
-    repeat(var(--cols), minmax(0, 1fr));
-
-  grid-template-rows:
-    repeat(var(--rows), minmax(0, 1fr));
 
   gap: 0;
 
   overflow: hidden;
-
-  flex: 0 0 auto;
-
-  break-inside: avoid;
-  page-break-inside: avoid;
 }
 
 
@@ -258,16 +194,9 @@ select {
   width: 100%;
   height: 100%;
 
-  min-width: 0;
-  min-height: 0;
-
-  /*
-    Actual cutting border.
-  */
-
   border: 0.35mm solid #000;
 
-  background: #fff;
+  background: white;
 
   display: flex;
 
@@ -276,46 +205,33 @@ select {
 
   text-align: center;
 
-  padding: var(--card-padding);
+  position: relative;
 
   overflow: hidden;
 
-  position: relative;
-
-  break-inside: avoid;
-  page-break-inside: avoid;
+  padding: 6mm;
 }
 
+.front {
+  flex-direction: column;
+}
 
-/* =========================================================
-   FRONT
-   ========================================================= */
-
-.front .english {
-
-  font-size: var(--front-font-size);
+.english {
 
   font-weight: 700;
 
   line-height: 1.1;
 
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 92%;
 
   overflow-wrap: anywhere;
-  word-break: break-word;
 }
-
-
-/* =========================================================
-   BACK
-   ========================================================= */
 
 .back {
 
   flex-direction: column;
 
-  gap: var(--back-gap);
+  gap: 5px;
 }
 
 .back-content {
@@ -327,232 +243,86 @@ select {
   align-items: center;
   justify-content: center;
 
-  gap: var(--token-gap);
+  gap: 5px;
 
-  max-width: 100%;
-  max-height: 100%;
-
-  overflow: hidden;
+  max-width: 92%;
 }
 
 .kana {
 
-  font-size: var(--kana-font-size);
-
   font-weight: 700;
 
   line-height: 1.1;
-
-  max-width: 100%;
 
   overflow-wrap: anywhere;
 }
 
 .back-row {
 
-  font-size: var(--back-font-size);
-
   line-height: 1.1;
-
-  max-width: 100%;
 
   overflow-wrap: anywhere;
 }
-
-
-/* =========================================================
-   CREATOR
-   ========================================================= */
 
 .creator {
 
   position: absolute;
 
+  bottom: 3mm;
+
   left: 0;
   right: 0;
 
-  bottom: var(--creator-bottom);
-
   text-align: center;
 
-  font-size: var(--creator-size);
+  color: #999;
+
+  font-size: 8px;
 
   letter-spacing: 2px;
-
-  color: #999;
 
   font-weight: 600;
 }
 
-
-/* =========================================================
-   EMPTY CELL
-   ========================================================= */
-
 .empty {
-
-  border: none !important;
-
-  background: transparent !important;
+  border: none;
 }
 
 
 /* =========================================================
-   PRINT MODE
+   PRINT
    ========================================================= */
 
 @media print {
 
-  html,
-  body {
-
-    margin: 0 !important;
-    padding: 0 !important;
-
-    width: 100%;
-    height: 100%;
-
-    background: #fff !important;
+  @page {
+    margin: 0;
   }
 
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
 
-  /*
-    Hide all UI.
-  */
-
-  .app > :not(#preview),
-  h1,
-  .sub {
-
+  .app > *:not(#preview) {
     display: none !important;
   }
 
-
   #preview {
-
-    display: block !important;
-
-    width: 100% !important;
-
     margin: 0 !important;
     padding: 0 !important;
   }
 
-
-  /*
-    Physical page.
-
-    IMPORTANT:
-    No transforms.
-    No scaling.
-    No negative margins.
-  */
-
-  .sheet {
-
-    width: var(--page-width) !important;
-    height: var(--page-height) !important;
-
-    min-width: var(--page-width) !important;
-    max-width: var(--page-width) !important;
-
-    min-height: var(--page-height) !important;
-    max-height: var(--page-height) !important;
-
+  .preview-page {
     margin: 0 !important;
-    padding: 0 !important;
-
-    display: flex !important;
-
-    align-items: center !important;
-    justify-content: center !important;
-
-    overflow: hidden !important;
-
-    background: #fff !important;
 
     box-shadow: none !important;
 
-    border: none !important;
+    break-after: page;
 
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-
-    break-after: page !important;
-    page-break-after: always !important;
-  }
-
-
-  .sheet:last-child {
-
-    break-after: auto !important;
-    page-break-after: auto !important;
-  }
-
-
-  /*
-    Preserve the exact safe grid.
-  */
-
-  .sheet-grid {
-
-    width:
-      calc(
-        var(--page-width)
-        - var(--safe-left)
-        - var(--safe-right)
-      ) !important;
-
-    height:
-      calc(
-        var(--page-height)
-        - var(--safe-top)
-        - var(--safe-bottom)
-      ) !important;
-
-    display: grid !important;
-
-    grid-template-columns:
-      repeat(var(--cols), minmax(0, 1fr)) !important;
-
-    grid-template-rows:
-      repeat(var(--rows), minmax(0, 1fr)) !important;
-
-    gap: 0 !important;
-
-    overflow: hidden !important;
-
-    flex: 0 0 auto !important;
-
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-  }
-
-
-  .card {
-
-    width: 100% !important;
-    height: 100% !important;
-
-    min-width: 0 !important;
-    min-height: 0 !important;
-
-    border: 0.35mm solid #000 !important;
-
-    background: #fff !important;
-
-    overflow: hidden !important;
-
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-  }
-
-
-  .empty {
-
-    border: none !important;
-
-    background: transparent !important;
+    page-break-after: always;
   }
 
 }
@@ -568,217 +338,200 @@ select {
 <div class="app">
 
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
-
-  <h1>
-    🇯🇵 Japanese Vocabulary Flashcards
-  </h1>
+<h1>
+  🇯🇵 Japanese Vocabulary Flashcards
+</h1>
 
 
-  <div class="sub">
-    Generate professional double-sided Japanese vocabulary flashcards.
-  </div>
+<div class="sub">
+  Generate double-sided Japanese vocabulary flashcards.
+</div>
 
 
-  <!-- =====================================================
-       INPUT
-       ===================================================== -->
+<textarea
+  id="csv"
+  placeholder="English<TAB>Hiragana / Katakana / Kanji / Romaji
 
-  <textarea
-    id="csv"
-    placeholder="Paste your vocabulary like this:
-I / me	わたし / 私 / watashi
-you	あなた / あなた / anata
-person	ひと / 人 / hito
-friend	ともだち / 友達 / tomodachi
+Example:
 
-One vocabulary item per line:
-English<TAB>Hiragana / Katakana / Kanji / Romaji"
-  ></textarea>
+I / me    わたし / 私 / watashi
+you       あなた / anata
+person    ひと / 人 / hito
+friend    ともだち / 友達 / tomodachi"
+></textarea>
 
 
-  <!-- =====================================================
-       CONTROLS
-       ===================================================== -->
-
-  <div class="controls">
+<div class="controls">
 
 
-    <!-- PAPER SIZE -->
+  <div class="control-group">
 
-    <div class="control-group">
+    <label>
+      Paper:
+    </label>
 
-      <label>
-        Paper:
-      </label>
-
-      <select
-        id="paperSize"
-        onchange="updateLayoutControls()"
-      >
-
-        <option value="a4">
-          A4 Portrait
-        </option>
-
-        <option value="a3">
-          A3 Portrait
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <!-- A3 COLUMNS -->
-
-    <div
-      id="a3ColumnsGroup"
-      class="control-group hidden"
+    <select
+      id="paperSize"
+      onchange="updateControls()"
     >
 
-      <label>
-        Cards / Row:
-      </label>
+      <option value="a4">
+        A4 Portrait
+      </option>
 
-      <select
-        id="columns"
-        onchange="generate()"
-      >
+      <option value="a3">
+        A3 Portrait
+      </option>
 
-        <option value="2">
-          2
-        </option>
-
-        <option value="3">
-          3
-        </option>
-
-        <option value="4">
-          4
-        </option>
-
-        <option value="5">
-          5
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <!-- A3 ROWS -->
-
-    <div
-      id="a3RowsGroup"
-      class="control-group hidden"
-    >
-
-      <label>
-        Rows / Page:
-      </label>
-
-      <select
-        id="rows"
-        onchange="generate()"
-      >
-
-        <option value="2">
-          2
-        </option>
-
-        <option value="3">
-          3
-        </option>
-
-        <option value="4">
-          4
-        </option>
-
-        <option value="5" selected>
-          5
-        </option>
-
-        <option value="6">
-          6
-        </option>
-
-        <option value="7">
-          7
-        </option>
-
-        <option value="8">
-          8
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <button onclick="generate()">
-      Generate Flashcards
-    </button>
-
-
-    <button
-      class="secondary"
-      onclick="window.print()"
-    >
-      Print / Save PDF
-    </button>
-
-
-    <button
-      class="secondary"
-      onclick="clearAll()"
-    >
-      Clear
-    </button>
+    </select>
 
   </div>
 
 
-  <!-- =====================================================
-       SAFE PRINT INFORMATION
-       ===================================================== -->
+  <div
+    id="columnsGroup"
+    class="control-group hidden"
+  >
 
-  <div class="hint">
+    <label>
+      Cards / Row:
+    </label>
 
-    <b>A4:</b>
-    2 × 5 = 10 cards/page.
+    <select
+      id="columns"
+      onchange="generate()"
+    >
 
-    <br>
+      <option value="2">
+        2
+      </option>
 
-    <b>A3:</b>
-    Choose cards per row and rows per page.
+      <option value="3">
+        3
+      </option>
 
-    <br>
+      <option value="4">
+        4
+      </option>
 
-    The card grid uses a
-    <b>5 mm safe inset</b>
-    on every side to prevent printer/PDF clipping.
+      <option value="5">
+        5
+      </option>
 
-    <br>
-
-    The grid is automatically centered horizontally
-    and vertically.
-
-    <br>
-
-    <b>Print:</b>
-    Portrait • Actual Size / 100% • Double-sided • Flip on long edge.
+    </select>
 
   </div>
 
 
-  <!-- =====================================================
-       PREVIEW
-       ===================================================== -->
+  <div
+    id="rowsGroup"
+    class="control-group hidden"
+  >
 
-  <div id="preview"></div>
+    <label>
+      Rows / Page:
+    </label>
+
+    <select
+      id="rows"
+      onchange="generate()"
+    >
+
+      <option value="2">
+        2
+      </option>
+
+      <option value="3">
+        3
+      </option>
+
+      <option value="4">
+        4
+      </option>
+
+      <option value="5" selected>
+        5
+      </option>
+
+      <option value="6">
+        6
+      </option>
+
+      <option value="7">
+        7
+      </option>
+
+      <option value="8">
+        8
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <button
+    onclick="generate()"
+  >
+    Generate
+  </button>
+
+
+  <button
+    class="pdf"
+    onclick="downloadPDF()"
+  >
+    Download Edge-to-Edge PDF
+  </button>
+
+
+  <button
+    class="secondary"
+    onclick="window.print()"
+  >
+    Browser Print
+  </button>
+
+
+  <button
+    class="secondary"
+    onclick="clearAll()"
+  >
+    Clear
+  </button>
+
+</div>
+
+
+<div class="hint">
+
+  <b>PDF:</b>
+  Generated directly by this app. Browser print margins are completely bypassed.
+
+  <br>
+
+  <b>A4:</b>
+  2 × 5 cards, edge-to-edge.
+
+  <br>
+
+  <b>A3:</b>
+  Choose cards per row and rows per page.
+
+  <br>
+
+  <b>Duplex:</b>
+  Print double-sided and flip on the long edge.
+
+  <br>
+
+  <b>Important:</b>
+  The PDF itself is edge-to-edge. A physical printer can still have a non-printable hardware border unless it supports borderless printing.
+
+</div>
+
+
+<div id="preview"></div>
 
 
 </div>
@@ -788,57 +541,67 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
 
 /* =========================================================
-   LAYOUT CONTROLS
+   PDF LIBRARIES
    ========================================================= */
 
-function updateLayoutControls() {
-
-  const paper =
-    document.getElementById("paperSize").value;
+const JSPDF_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
 
-  const columnsGroup =
-    document.getElementById("a3ColumnsGroup");
+/* =========================================================
+   LOAD jsPDF
+   ========================================================= */
 
-  const rowsGroup =
-    document.getElementById("a3RowsGroup");
+function loadJsPDF() {
 
+  return new Promise((resolve, reject) => {
 
-  if (paper === "a3") {
+    if (
+      window.jspdf &&
+      window.jspdf.jsPDF
+    ) {
 
-    columnsGroup.classList.remove("hidden");
+      resolve();
 
-    rowsGroup.classList.remove("hidden");
+      return;
 
-  }
-
-  else {
-
-    columnsGroup.classList.add("hidden");
-
-    rowsGroup.classList.add("hidden");
-
-  }
+    }
 
 
-  generate();
+    const script =
+      document.createElement("script");
+
+
+    script.src = JSPDF_URL;
+
+    script.onload = resolve;
+
+    script.onerror = () =>
+      reject(
+        new Error(
+          "Could not load PDF generator."
+        )
+      );
+
+
+    document.head.appendChild(script);
+
+  });
+
 }
 
 
 /* =========================================================
-   GET LAYOUT
+   PAGE DIMENSIONS
    ========================================================= */
 
 function getLayout() {
 
   const paper =
-    document.getElementById("paperSize").value;
+    document
+      .getElementById("paperSize")
+      .value;
 
-
-  /*
-    A4:
-    fixed 2 × 5.
-  */
 
   if (paper === "a4") {
 
@@ -846,43 +609,36 @@ function getLayout() {
 
       paper: "a4",
 
+      widthMM: 210,
+
+      heightMM: 297,
+
+      widthPX: 2480,
+
+      heightPX: 3508,
+
       columns: 2,
 
-      rows: 5,
-
-      pageWidth: "210mm",
-
-      pageHeight: "297mm",
-
-      safeTop: "5mm",
-
-      safeRight: "5mm",
-
-      safeBottom: "5mm",
-
-      safeLeft: "5mm"
+      rows: 5
 
     };
 
   }
 
 
-  /*
-    A3:
-    user controlled.
-  */
-
   const columns =
     parseInt(
-      document.getElementById("columns").value,
-      10
+      document
+        .getElementById("columns")
+        .value
     );
 
 
   const rows =
     parseInt(
-      document.getElementById("rows").value,
-      10
+      document
+        .getElementById("rows")
+        .value
     );
 
 
@@ -890,21 +646,17 @@ function getLayout() {
 
     paper: "a3",
 
+    widthMM: 297,
+
+    heightMM: 420,
+
+    widthPX: 3508,
+
+    heightPX: 4961,
+
     columns,
 
-    rows,
-
-    pageWidth: "297mm",
-
-    pageHeight: "420mm",
-
-    safeTop: "6mm",
-
-    safeRight: "6mm",
-
-    safeBottom: "6mm",
-
-    safeLeft: "6mm"
+    rows
 
   };
 
@@ -912,154 +664,17 @@ function getLayout() {
 
 
 /* =========================================================
-   TYPOGRAPHY SCALING
-   ========================================================= */
-
-function getCardStyle(
-  columns,
-  rows,
-  paper
-) {
-
-  const density =
-    columns * rows;
-
-
-  let front =
-    paper === "a3"
-      ? 48
-      : 42;
-
-
-  let kana =
-    paper === "a3"
-      ? 32
-      : 28;
-
-
-  let back =
-    paper === "a3"
-      ? 26
-      : 24;
-
-
-  let padding =
-    paper === "a3"
-      ? 8
-      : 7;
-
-
-  let gap = 7;
-
-  let tokenGap = 5;
-
-  let creator = 9;
-
-  let creatorBottom = 4;
-
-
-  /*
-    Automatically scale down
-    when cards become smaller.
-  */
-
-  if (density >= 12) {
-
-    front *= 0.90;
-    kana *= 0.90;
-    back *= 0.90;
-
-    padding = 5;
-
-    gap = 5;
-    tokenGap = 4;
-
-  }
-
-
-  if (density >= 15) {
-
-    front *= 0.85;
-    kana *= 0.85;
-    back *= 0.85;
-
-    padding = 4;
-
-    gap = 4;
-    tokenGap = 3;
-
-    creator = 8;
-
-  }
-
-
-  if (density >= 20) {
-
-    front *= 0.80;
-    kana *= 0.80;
-    back *= 0.80;
-
-    padding = 3;
-
-    gap = 3;
-    tokenGap = 2;
-
-    creator = 7;
-
-  }
-
-
-  /*
-    Prevent absurdly tiny text.
-  */
-
-  front =
-    Math.max(front, 22);
-
-  kana =
-    Math.max(kana, 18);
-
-  back =
-    Math.max(back, 15);
-
-
-  return {
-
-    front: `${front}px`,
-
-    kana: `${kana}px`,
-
-    back: `${back}px`,
-
-    padding: `${padding}mm`,
-
-    gap: `${gap}px`,
-
-    tokenGap: `${tokenGap}px`,
-
-    creator: `${creator}px`,
-
-    creatorBottom:
-      `${creatorBottom}mm`
-
-  };
-
-}
-
-
-/* =========================================================
-   PARSE VOCABULARY
+   PARSE INPUT
    ========================================================= */
 
 function parseVocabulary(text) {
 
-  const rows = [];
+  const result = [];
 
 
   text
     .split(/\r?\n/)
     .forEach(line => {
-
 
       if (!line.trim())
         return;
@@ -1069,121 +684,153 @@ function parseVocabulary(text) {
         line.indexOf("\t");
 
 
-      if (tab < 0)
+      if (tab === -1)
         return;
 
 
-      const englishRaw =
+      const english =
         line
-          .slice(0, tab)
+          .substring(0, tab)
           .trim();
 
 
-      const column2 =
+      const japanese =
         line
-          .slice(tab + 1)
+          .substring(tab + 1)
           .trim();
 
 
-      if (!englishRaw || !column2)
+      if (
+        !english ||
+        !japanese
+      ) {
         return;
+      }
 
 
-      const tokens =
-        column2
-          .split(/\s*\/\s*/)
-          .map(x => x.trim())
-          .filter(Boolean);
+      result.push({
 
+        english,
 
-      let hira = "";
-      let kata = "";
-      let romaji = "";
-      let kanji = "";
-
-      const extra = [];
-
-
-      tokens.forEach(t => {
-
-
-        if (
-          /^[ぁ-ゖー\s・]+$/.test(t)
-          && !hira
-        ) {
-
-          hira = t;
-
-        }
-
-        else if (
-          /^[ァ-ヺー\s・]+$/.test(t)
-          && !kata
-        ) {
-
-          kata = t;
-
-        }
-
-        else if (
-          /^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'・-]*$/.test(t)
-          && !romaji
-        ) {
-
-          romaji = t;
-
-        }
-
-        else if (
-          /[\u3400-\u9FFF\uF900-\uFAFF]/.test(t)
-          && !kanji
-        ) {
-
-          kanji = t;
-
-        }
-
-        else {
-
-          extra.push(t);
-
-        }
-
-      });
-
-
-      rows.push({
-
-        english:
-          englishRaw.charAt(0).toUpperCase()
-          + englishRaw.slice(1),
-
-        hira,
-        kata,
-        romaji,
-        kanji,
-
-        extra,
-
-        rawColumn2: column2
+        tokens:
+          japanese
+            .split(/\s*\/\s*/)
+            .map(x => x.trim())
+            .filter(Boolean)
 
       });
 
     });
 
 
-  return rows;
+  return result;
 
 }
 
 
 /* =========================================================
-   GENERATE
+   FONT SIZES
+   ========================================================= */
+
+function getFonts(
+  columns,
+  rows,
+  paper
+) {
+
+  const density =
+    columns * rows;
+
+
+  let english =
+    paper === "a3"
+      ? 125
+      : 115;
+
+
+  let japanese =
+    paper === "a3"
+      ? 90
+      : 75;
+
+
+  let secondary =
+    paper === "a3"
+      ? 60
+      : 52;
+
+
+  if (density >= 15) {
+
+    english *= 0.82;
+    japanese *= 0.82;
+    secondary *= 0.82;
+
+  }
+
+
+  if (density >= 20) {
+
+    english *= 0.75;
+    japanese *= 0.75;
+    secondary *= 0.75;
+
+  }
+
+
+  return {
+
+    english,
+    japanese,
+    secondary
+
+  };
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+   ========================================================= */
+
+function updateControls() {
+
+  const a3 =
+    document
+      .getElementById("paperSize")
+      .value === "a3";
+
+
+  document
+    .getElementById("columnsGroup")
+    .classList
+    .toggle(
+      "hidden",
+      !a3
+    );
+
+
+  document
+    .getElementById("rowsGroup")
+    .classList
+    .toggle(
+      "hidden",
+      !a3
+    );
+
+
+  generate();
+
+}
+
+
+/* =========================================================
+   CREATE PREVIEW
    ========================================================= */
 
 function generate() {
 
-  const text =
+  const input =
     document
       .getElementById("csv")
       .value
@@ -1191,138 +838,99 @@ function generate() {
 
 
   const preview =
-    document.getElementById("preview");
+    document
+      .getElementById("preview");
 
 
-  if (!text) {
+  preview.innerHTML = "";
 
-    preview.innerHTML = "";
 
+  if (!input)
     return;
-
-  }
 
 
   const data =
-    parseVocabulary(text);
+    parseVocabulary(input);
 
 
-  if (!data.length) {
-
-    alert(
-      "No vocabulary found.\n\nUse:\nEnglish<TAB>Hiragana / Kanji / Romaji"
-    );
-
+  if (!data.length)
     return;
-
-  }
 
 
   const layout =
     getLayout();
 
 
-  const cardsPerPage =
+  const perPage =
     layout.columns *
     layout.rows;
 
 
-  const style =
-    getCardStyle(
+  const fonts =
+    getFonts(
       layout.columns,
       layout.rows,
       layout.paper
     );
 
 
-  preview.innerHTML = "";
-
-
-  /*
-    Process one physical page at a time.
-  */
-
   for (
     let start = 0;
     start < data.length;
-    start += cardsPerPage
+    start += perPage
   ) {
 
 
     const chunk =
       data.slice(
         start,
-        start + cardsPerPage
+        start + perPage
       );
 
 
-    /* =====================================================
-       FRONT
-       ===================================================== */
+    /* FRONT */
 
     const front =
-      createSheet(
+      createPreviewPage(
         layout,
-        style
+        fonts
       );
 
 
     chunk.forEach(item => {
 
       front.grid.appendChild(
-        createFrontCard(item)
+        createFront(item, fonts)
       );
 
     });
 
 
-    /*
-      Fill unused cells.
-    */
-
     while (
       front.grid.children.length <
-      cardsPerPage
+      perPage
     ) {
 
       front.grid.appendChild(
-        createEmptyCard()
+        createEmpty()
       );
 
     }
 
 
     preview.appendChild(
-      front.sheet
+      front.page
     );
 
 
-    /* =====================================================
-       BACK
-       ===================================================== */
+    /* BACK */
 
     const back =
-      createSheet(
+      createPreviewPage(
         layout,
-        style
+        fonts
       );
 
-
-    /*
-      Mirror every row.
-
-      Example:
-
-      FRONT
-      1  2
-      3  4
-      5  6
-
-      BACK
-      2  1
-      4  3
-      6  5
-    */
 
     for (
       let row = 0;
@@ -1331,24 +939,16 @@ function generate() {
     ) {
 
 
-      const rowStart =
+      const startIndex =
         row *
         layout.columns;
-
-
-      const rowEnd =
-        Math.min(
-          rowStart +
-          layout.columns,
-          chunk.length
-        );
 
 
       const rowItems =
         chunk
           .slice(
-            rowStart,
-            rowEnd
+            startIndex,
+            startIndex + layout.columns
           )
           .reverse();
 
@@ -1356,7 +956,7 @@ function generate() {
       rowItems.forEach(item => {
 
         back.grid.appendChild(
-          createBackCard(item)
+          createBack(item, fonts)
         );
 
       });
@@ -1364,24 +964,20 @@ function generate() {
     }
 
 
-    /*
-      Fill unused cells.
-    */
-
     while (
       back.grid.children.length <
-      cardsPerPage
+      perPage
     ) {
 
       back.grid.appendChild(
-        createEmptyCard()
+        createEmpty()
       );
 
     }
 
 
     preview.appendChild(
-      back.sheet
+      back.page
     );
 
   }
@@ -1390,123 +986,51 @@ function generate() {
 
 
 /* =========================================================
-   CREATE SHEET
+   PREVIEW PAGE
    ========================================================= */
 
-function createSheet(
+function createPreviewPage(
   layout,
-  style
+  fonts
 ) {
 
-  const sheet =
+  const page =
     document.createElement("div");
 
 
-  sheet.className =
-    `sheet ${layout.paper}`;
+  page.className =
+    "preview-page";
 
 
-  sheet.style.setProperty(
-    "--page-width",
-    layout.pageWidth
-  );
-
-  sheet.style.setProperty(
-    "--page-height",
-    layout.pageHeight
-  );
+  page.style.width =
+    `${layout.widthMM}mm`;
 
 
-  sheet.style.setProperty(
-    "--safe-top",
-    layout.safeTop
-  );
+  page.style.height =
+    `${layout.heightMM}mm`;
 
-  sheet.style.setProperty(
-    "--safe-right",
-    layout.safeRight
-  );
-
-  sheet.style.setProperty(
-    "--safe-bottom",
-    layout.safeBottom
-  );
-
-  sheet.style.setProperty(
-    "--safe-left",
-    layout.safeLeft
-  );
-
-
-  sheet.style.setProperty(
-    "--cols",
-    layout.columns
-  );
-
-  sheet.style.setProperty(
-    "--rows",
-    layout.rows
-  );
-
-
-  sheet.style.setProperty(
-    "--front-font-size",
-    style.front
-  );
-
-  sheet.style.setProperty(
-    "--kana-font-size",
-    style.kana
-  );
-
-  sheet.style.setProperty(
-    "--back-font-size",
-    style.back
-  );
-
-  sheet.style.setProperty(
-    "--card-padding",
-    style.padding
-  );
-
-  sheet.style.setProperty(
-    "--back-gap",
-    style.gap
-  );
-
-  sheet.style.setProperty(
-    "--token-gap",
-    style.tokenGap
-  );
-
-  sheet.style.setProperty(
-    "--creator-size",
-    style.creator
-  );
-
-  sheet.style.setProperty(
-    "--creator-bottom",
-    style.creatorBottom
-  );
-
-
-  /*
-    Grid lives inside the page.
-  */
 
   const grid =
     document.createElement("div");
 
 
   grid.className =
-    "sheet-grid";
+    "preview-grid";
 
 
-  sheet.appendChild(grid);
+  grid.style.gridTemplateColumns =
+    `repeat(${layout.columns}, 1fr)`;
+
+
+  grid.style.gridTemplateRows =
+    `repeat(${layout.rows}, 1fr)`;
+
+
+  page.appendChild(grid);
 
 
   return {
-    sheet,
+    page,
     grid
   };
 
@@ -1514,10 +1038,13 @@ function createSheet(
 
 
 /* =========================================================
-   FRONT CARD
+   FRONT
    ========================================================= */
 
-function createFrontCard(item) {
+function createFront(
+  item,
+  fonts
+) {
 
   const card =
     document.createElement("div");
@@ -1529,16 +1056,17 @@ function createFrontCard(item) {
 
   card.innerHTML = `
 
-    <div class="english">
-
-      ${esc(item.english)}
-
+    <div
+      class="english"
+      style="
+        font-size:${fonts.english}px;
+      "
+    >
+      ${escapeHTML(item.english)}
     </div>
 
     <div class="creator">
-
       MΛIRO
-
     </div>
 
   `;
@@ -1550,10 +1078,13 @@ function createFrontCard(item) {
 
 
 /* =========================================================
-   BACK CARD
+   BACK
    ========================================================= */
 
-function createBackCard(item) {
+function createBack(
+  item,
+  fonts
+) {
 
   const card =
     document.createElement("div");
@@ -1563,49 +1094,70 @@ function createBackCard(item) {
     "card back";
 
 
-  const tokens =
-    item.rawColumn2
-      .split(/\s*\/\s*/)
-      .map(x => x.trim())
-      .filter(Boolean);
+  const content =
+    document.createElement("div");
 
 
-  card.innerHTML = `
+  content.className =
+    "back-content";
 
-    <div class="back-content">
 
-      ${
-        tokens
-          .map(
-            (token, index) => `
+  item.tokens.forEach(
+    (token, index) => {
 
-              <div
-                class="${
-                  index === 0
-                    ? "kana"
-                    : "back-row"
-                }"
-              >
+      const line =
+        document.createElement("div");
 
-                ${esc(token)}
 
-              </div>
+      line.textContent =
+        token;
 
-            `
-          )
-          .join("")
+
+      if (index === 0) {
+
+        line.className =
+          "kana";
+
+
+        line.style.fontSize =
+          `${fonts.japanese}px`;
+
       }
 
-    </div>
+      else {
+
+        line.className =
+          "back-row";
 
 
-    <div class="creator">
+        line.style.fontSize =
+          `${fonts.secondary}px`;
 
-      MΛIRO
+      }
 
-    </div>
 
-  `;
+      content.appendChild(line);
+
+    }
+  );
+
+
+  card.appendChild(content);
+
+
+  const creator =
+    document.createElement("div");
+
+
+  creator.className =
+    "creator";
+
+
+  creator.textContent =
+    "MΛIRO";
+
+
+  card.appendChild(creator);
 
 
   return card;
@@ -1614,10 +1166,10 @@ function createBackCard(item) {
 
 
 /* =========================================================
-   EMPTY CARD
+   EMPTY
    ========================================================= */
 
-function createEmptyCard() {
+function createEmpty() {
 
   const card =
     document.createElement("div");
@@ -1628,6 +1180,804 @@ function createEmptyCard() {
 
 
   return card;
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(
+      /[&<>"']/g,
+      char => ({
+
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+
+      }[char])
+    );
+
+}
+
+
+/* =========================================================
+   CANVAS TEXT WRAPPING
+   ========================================================= */
+
+function wrapText(
+  ctx,
+  text,
+  maxWidth
+) {
+
+  const characters =
+    [...String(text)];
+
+
+  const lines = [];
+
+  let current = "";
+
+
+  characters.forEach(char => {
+
+    const test =
+      current + char;
+
+
+    if (
+      ctx.measureText(test).width
+      <= maxWidth
+    ) {
+
+      current = test;
+
+    }
+
+    else {
+
+      if (current)
+        lines.push(current);
+
+
+      current = char;
+
+    }
+
+  });
+
+
+  if (current)
+    lines.push(current);
+
+
+  return lines;
+
+}
+
+
+/* =========================================================
+   DRAW CENTERED TEXT
+   ========================================================= */
+
+function drawCenteredText(
+  ctx,
+  text,
+  centerX,
+  centerY,
+  maxWidth,
+  fontSize,
+  weight = "700"
+) {
+
+  ctx.font =
+    `${weight} ${fontSize}px Arial, "Noto Sans JP", "Yu Gothic", sans-serif`;
+
+
+  ctx.textAlign =
+    "center";
+
+
+  ctx.textBaseline =
+    "middle";
+
+
+  const lines =
+    wrapText(
+      ctx,
+      text,
+      maxWidth
+    );
+
+
+  const lineHeight =
+    fontSize * 1.15;
+
+
+  const totalHeight =
+    lines.length *
+    lineHeight;
+
+
+  let y =
+    centerY -
+    totalHeight / 2 +
+    lineHeight / 2;
+
+
+  lines.forEach(line => {
+
+    ctx.fillText(
+      line,
+      centerX,
+      y
+    );
+
+
+    y += lineHeight;
+
+  });
+
+}
+
+
+/* =========================================================
+   DRAW CARD BORDER
+   ========================================================= */
+
+function drawBorder(
+  ctx,
+  x,
+  y,
+  width,
+  height,
+  lineWidth
+) {
+
+  ctx.strokeStyle =
+    "#000000";
+
+
+  ctx.lineWidth =
+    lineWidth;
+
+
+  /*
+    Half-pixel adjustment prevents
+    fuzzy borders while maintaining
+    exact card boundaries.
+  */
+
+  ctx.strokeRect(
+    x + lineWidth / 2,
+    y + lineWidth / 2,
+    width - lineWidth,
+    height - lineWidth
+  );
+
+}
+
+
+/* =========================================================
+   DRAW FRONT PDF PAGE
+   ========================================================= */
+
+function drawFrontPage(
+  data,
+  layout,
+  canvas
+) {
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  ctx.fillStyle =
+    "#ffffff";
+
+
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  const cardWidth =
+    canvas.width /
+    layout.columns;
+
+
+  const cardHeight =
+    canvas.height /
+    layout.rows;
+
+
+  const fonts =
+    getFonts(
+      layout.columns,
+      layout.rows,
+      layout.paper
+    );
+
+
+  const perPage =
+    layout.columns *
+    layout.rows;
+
+
+  for (
+    let i = 0;
+    i < perPage;
+    i++
+  ) {
+
+
+    const col =
+      i %
+      layout.columns;
+
+
+    const row =
+      Math.floor(
+        i /
+        layout.columns
+      );
+
+
+    const x =
+      col *
+      cardWidth;
+
+
+    const y =
+      row *
+      cardHeight;
+
+
+    drawBorder(
+      ctx,
+      x,
+      y,
+      cardWidth,
+      cardHeight,
+      3
+    );
+
+
+    if (!data[i])
+      continue;
+
+
+    drawCenteredText(
+      ctx,
+
+      data[i].english,
+
+      x +
+      cardWidth / 2,
+
+      y +
+      cardHeight / 2,
+
+      cardWidth * 0.88,
+
+      fonts.english,
+
+      "700"
+    );
+
+
+    ctx.fillStyle =
+      "#999999";
+
+
+    ctx.font =
+      "600 28px Arial";
+
+
+    ctx.textAlign =
+      "center";
+
+
+    ctx.textBaseline =
+      "alphabetic";
+
+
+    ctx.fillText(
+      "MΛIRO",
+      x + cardWidth / 2,
+      y + cardHeight - 30
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DRAW BACK PDF PAGE
+   ========================================================= */
+
+function drawBackPage(
+  data,
+  layout,
+  canvas
+) {
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  ctx.fillStyle =
+    "#ffffff";
+
+
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  const cardWidth =
+    canvas.width /
+    layout.columns;
+
+
+  const cardHeight =
+    canvas.height /
+    layout.rows;
+
+
+  const fonts =
+    getFonts(
+      layout.columns,
+      layout.rows,
+      layout.paper
+    );
+
+
+  const perPage =
+    layout.columns *
+    layout.rows;
+
+
+  for (
+    let i = 0;
+    i < perPage;
+    i++
+  ) {
+
+
+    const row =
+      Math.floor(
+        i /
+        layout.columns
+      );
+
+
+    const col =
+      i %
+      layout.columns;
+
+
+    /*
+      IMPORTANT:
+
+      Back-side row is horizontally mirrored.
+
+      Front:
+      A B
+
+      Back:
+      B A
+    */
+
+    const sourceIndex =
+      row *
+      layout.columns
+      +
+      (
+        layout.columns -
+        1 -
+        col
+      );
+
+
+    const x =
+      col *
+      cardWidth;
+
+
+    const y =
+      row *
+      cardHeight;
+
+
+    drawBorder(
+      ctx,
+      x,
+      y,
+      cardWidth,
+      cardHeight,
+      3
+    );
+
+
+    const item =
+      data[sourceIndex];
+
+
+    if (!item)
+      continue;
+
+
+    const tokens =
+      item.tokens;
+
+
+    const first =
+      tokens.length
+        ? tokens[0]
+        : "";
+
+
+    drawCenteredText(
+      ctx,
+
+      first,
+
+      x +
+      cardWidth / 2,
+
+      y +
+      cardHeight / 2
+      -
+      fonts.japanese * 0.35,
+
+      cardWidth * 0.88,
+
+      fonts.japanese,
+
+      "700"
+    );
+
+
+    const remaining =
+      tokens.slice(1);
+
+
+    if (remaining.length) {
+
+      const text =
+        remaining.join(" / ");
+
+
+      drawCenteredText(
+        ctx,
+
+        text,
+
+        x +
+        cardWidth / 2,
+
+        y +
+        cardHeight / 2
+        +
+        fonts.secondary * 1.0,
+
+        cardWidth * 0.88,
+
+        fonts.secondary,
+
+        "400"
+      );
+
+    }
+
+
+    ctx.fillStyle =
+      "#999999";
+
+
+    ctx.font =
+      "600 28px Arial";
+
+
+    ctx.textAlign =
+      "center";
+
+
+    ctx.textBaseline =
+      "alphabetic";
+
+
+    ctx.fillText(
+      "MΛIRO",
+      x + cardWidth / 2,
+      y + cardHeight - 30
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DOWNLOAD PDF
+   ========================================================= */
+
+async function downloadPDF() {
+
+  const input =
+    document
+      .getElementById("csv")
+      .value
+      .trim();
+
+
+  if (!input) {
+
+    alert(
+      "Enter your vocabulary first."
+    );
+
+    return;
+
+  }
+
+
+  const data =
+    parseVocabulary(input);
+
+
+  if (!data.length) {
+
+    alert(
+      "No vocabulary found."
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.querySelector(
+      "button.pdf"
+    );
+
+
+  const originalText =
+    button.textContent;
+
+
+  button.disabled =
+    true;
+
+
+  button.textContent =
+    "Generating PDF...";
+
+
+  try {
+
+    await loadJsPDF();
+
+
+    const {
+      jsPDF
+    } = window.jspdf;
+
+
+    const layout =
+      getLayout();
+
+
+    /*
+      Exact physical PDF dimensions.
+
+      No margins.
+      No safe inset.
+      No browser scaling.
+    */
+
+    const pdf =
+      new jsPDF({
+
+        orientation:
+          "portrait",
+
+        unit:
+          "mm",
+
+        format:
+          [
+            layout.widthMM,
+            layout.heightMM
+          ],
+
+        compress:
+          true
+
+      });
+
+
+    const perPage =
+      layout.columns *
+      layout.rows;
+
+
+    for (
+      let start = 0;
+      start < data.length;
+      start += perPage
+    ) {
+
+
+      const chunk =
+        data.slice(
+          start,
+          start + perPage
+        );
+
+
+      /*
+        300 DPI canvas.
+
+        A4:
+        2480 × 3508
+
+        A3:
+        3508 × 4961
+      */
+
+      const frontCanvas =
+        document.createElement("canvas");
+
+
+      frontCanvas.width =
+        layout.widthPX;
+
+
+      frontCanvas.height =
+        layout.heightPX;
+
+
+      drawFrontPage(
+        chunk,
+        layout,
+        frontCanvas
+      );
+
+
+      const frontImage =
+        frontCanvas.toDataURL(
+          "image/jpeg",
+          0.97
+        );
+
+
+      if (start > 0) {
+
+        pdf.addPage(
+          [
+            layout.widthMM,
+            layout.heightMM
+          ]
+        );
+
+      }
+
+
+      /*
+        EXACTLY fills the PDF page.
+      */
+
+      pdf.addImage(
+        frontImage,
+        "JPEG",
+        0,
+        0,
+        layout.widthMM,
+        layout.heightMM,
+        undefined,
+        "FAST"
+      );
+
+
+      /*
+        BACK PAGE
+      */
+
+      const backCanvas =
+        document.createElement("canvas");
+
+
+      backCanvas.width =
+        layout.widthPX;
+
+
+      backCanvas.height =
+        layout.heightPX;
+
+
+      drawBackPage(
+        chunk,
+        layout,
+        backCanvas
+      );
+
+
+      const backImage =
+        backCanvas.toDataURL(
+          "image/jpeg",
+          0.97
+        );
+
+
+      pdf.addPage(
+        [
+          layout.widthMM,
+          layout.heightMM
+        ]
+      );
+
+
+      pdf.addImage(
+        backImage,
+        "JPEG",
+        0,
+        0,
+        layout.widthMM,
+        layout.heightMM,
+        undefined,
+        "FAST"
+      );
+
+    }
+
+
+    const filename =
+      `Japanese_Flashcards_${layout.paper.toUpperCase()}_EdgeToEdge.pdf`;
+
+
+    pdf.save(filename);
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+
+    alert(
+      "PDF generation failed.\n\n" +
+      error.message
+    );
+
+  }
+
+  finally {
+
+    button.disabled =
+      false;
+
+
+    button.textContent =
+      originalText;
+
+  }
 
 }
 
@@ -1651,36 +2001,14 @@ function clearAll() {
 
 
 /* =========================================================
-   HTML ESCAPE
+   INITIAL LOAD
    ========================================================= */
 
-function esc(value) {
-
-  return String(value).replace(
-    /[&<>"']/g,
-
-    char => ({
-
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-
-    }[char])
-
-  );
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-   ========================================================= */
-
-updateLayoutControls();
+updateControls();
 
 </script>
 
+
 </body>
+
 </html>
