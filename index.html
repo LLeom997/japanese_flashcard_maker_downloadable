@@ -10,10 +10,7 @@
   content="width=device-width, initial-scale=1.0"
 >
 
-<title>
-  Japanese Vocabulary Flashcards
-</title>
-
+<title>Japanese Vocabulary Flashcards</title>
 
 <style>
 
@@ -54,7 +51,7 @@ h1 {
 
 textarea {
   width: 100%;
-  min-height: 220px;
+  min-height: 320px;
 
   padding: 12px;
 
@@ -65,6 +62,7 @@ textarea {
   font-size: 14px;
 
   resize: vertical;
+  line-height: 1.5;
 }
 
 .controls {
@@ -118,6 +116,11 @@ button.pdf {
   background: #b00020;
 }
 
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 select {
   background: white;
 }
@@ -136,6 +139,20 @@ select {
   color: #666;
 }
 
+.format {
+  margin-top: 8px;
+
+  padding: 10px 12px;
+
+  background: #f7f7f7;
+
+  border-left: 4px solid #222;
+
+  font-family: monospace;
+
+  white-space: pre-wrap;
+}
+
 
 /* =========================================================
    PREVIEW
@@ -150,11 +167,6 @@ select {
   gap: 25px;
 }
 
-
-/* =========================================================
-   PREVIEW PAGE
-   ========================================================= */
-
 .preview-page {
 
   background: white;
@@ -166,11 +178,6 @@ select {
 
   overflow: hidden;
 }
-
-
-/* =========================================================
-   PREVIEW GRID
-   ========================================================= */
 
 .preview-grid {
 
@@ -344,25 +351,51 @@ select {
 
 
 <div class="sub">
-  Generate double-sided Japanese vocabulary flashcards.
+  Paste your Japanese vocabulary below and generate printable double-sided flashcards.
 </div>
 
 
 <textarea
   id="csv"
-  placeholder="English<TAB>Hiragana / Katakana / Kanji / Romaji
+  placeholder="Paste your vocabulary here...
 
 Example:
 
-I / me    わたし / 私 / watashi
-you       あなた / anata
-person    ひと / 人 / hito
-friend    ともだち / 友達 / tomodachi"
+person	ひと / 人 / hito
+friend	ともだち / 友達 / tomodachi
+family	かぞく / 家族 / kazoku
+teacher	せんせい / 先生 / sensei
+student	がくせい / 学生 / gakusei
+school	がっこう / 学校 / gakkō
+university	だいがく / 大学 / daigaku
+company	かいしゃ / 会社 / kaisha
+house / home	いえ / 家 / ie
+room	へや / 部屋 / heya
+book	ほん / 本 / hon"
 ></textarea>
+
+
+<div class="format">
+
+INPUT FORMAT:
+
+English<TAB>Hiragana / Kanji / Romaji
+
+Example:
+person	ひと / 人 / hito
+
+The English side becomes the FRONT.
+The Japanese side becomes the BACK.
+
+You can paste hundreds of vocabulary entries at once.
+
+</div>
 
 
 <div class="controls">
 
+
+  <!-- PAPER -->
 
   <div class="control-group">
 
@@ -387,6 +420,8 @@ friend    ともだち / 友達 / tomodachi"
 
   </div>
 
+
+  <!-- A3 COLUMNS -->
 
   <div
     id="columnsGroup"
@@ -422,6 +457,8 @@ friend    ともだち / 友達 / tomodachi"
 
   </div>
 
+
+  <!-- A3 ROWS -->
 
   <div
     id="rowsGroup"
@@ -500,18 +537,14 @@ friend    ともだち / 友達 / tomodachi"
     Clear
   </button>
 
+
 </div>
 
 
 <div class="hint">
 
-  <b>PDF:</b>
-  Generated directly by this app. Browser print margins are completely bypassed.
-
-  <br>
-
   <b>A4:</b>
-  2 × 5 cards, edge-to-edge.
+  2 × 5 cards per page.
 
   <br>
 
@@ -520,13 +553,13 @@ friend    ともだち / 友達 / tomodachi"
 
   <br>
 
-  <b>Duplex:</b>
-  Print double-sided and flip on the long edge.
+  <b>PDF:</b>
+  The downloaded PDF is generated directly at the exact physical paper size with zero PDF margins.
 
   <br>
 
-  <b>Important:</b>
-  The PDF itself is edge-to-edge. A physical printer can still have a non-printable hardware border unless it supports borderless printing.
+  <b>Duplex:</b>
+  Print double-sided and flip on the long edge.
 
 </div>
 
@@ -541,16 +574,12 @@ friend    ともだち / 友達 / tomodachi"
 
 
 /* =========================================================
-   PDF LIBRARIES
+   LOAD jsPDF
    ========================================================= */
 
 const JSPDF_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
-
-/* =========================================================
-   LOAD jsPDF
-   ========================================================= */
 
 function loadJsPDF() {
 
@@ -572,16 +601,21 @@ function loadJsPDF() {
       document.createElement("script");
 
 
-    script.src = JSPDF_URL;
+    script.src =
+      JSPDF_URL;
 
-    script.onload = resolve;
 
-    script.onerror = () =>
-      reject(
-        new Error(
-          "Could not load PDF generator."
-        )
-      );
+    script.onload =
+      resolve;
+
+
+    script.onerror =
+      () =>
+        reject(
+          new Error(
+            "Could not load PDF generator."
+          )
+        );
 
 
     document.head.appendChild(script);
@@ -592,7 +626,7 @@ function loadJsPDF() {
 
 
 /* =========================================================
-   PAGE DIMENSIONS
+   PAGE LAYOUT
    ========================================================= */
 
 function getLayout() {
@@ -630,7 +664,8 @@ function getLayout() {
     parseInt(
       document
         .getElementById("columns")
-        .value
+        .value,
+      10
     );
 
 
@@ -638,7 +673,8 @@ function getLayout() {
     parseInt(
       document
         .getElementById("rows")
-        .value
+        .value,
+      10
     );
 
 
@@ -664,7 +700,7 @@ function getLayout() {
 
 
 /* =========================================================
-   PARSE INPUT
+   PARSE USER DATA
    ========================================================= */
 
 function parseVocabulary(text) {
@@ -676,27 +712,44 @@ function parseVocabulary(text) {
     .split(/\r?\n/)
     .forEach(line => {
 
-      if (!line.trim())
+      line =
+        line.trim();
+
+
+      if (!line)
         return;
 
 
-      const tab =
+      const tabIndex =
         line.indexOf("\t");
 
 
-      if (tab === -1)
+      if (tabIndex === -1) {
+
+        console.warn(
+          "Skipped line without TAB:",
+          line
+        );
+
         return;
+
+      }
 
 
       const english =
         line
-          .substring(0, tab)
+          .substring(
+            0,
+            tabIndex
+          )
           .trim();
 
 
       const japanese =
         line
-          .substring(tab + 1)
+          .substring(
+            tabIndex + 1
+          )
           .trim();
 
 
@@ -704,19 +757,26 @@ function parseVocabulary(text) {
         !english ||
         !japanese
       ) {
+
         return;
+
       }
+
+
+      const tokens =
+        japanese
+          .split(/\s*\/\s*/)
+          .map(
+            x => x.trim()
+          )
+          .filter(Boolean);
 
 
       result.push({
 
         english,
 
-        tokens:
-          japanese
-            .split(/\s*\/\s*/)
-            .map(x => x.trim())
-            .filter(Boolean)
+        tokens
 
       });
 
@@ -763,7 +823,9 @@ function getFonts(
   if (density >= 15) {
 
     english *= 0.82;
+
     japanese *= 0.82;
+
     secondary *= 0.82;
 
   }
@@ -772,7 +834,9 @@ function getFonts(
   if (density >= 20) {
 
     english *= 0.75;
+
     japanese *= 0.75;
+
     secondary *= 0.75;
 
   }
@@ -790,12 +854,12 @@ function getFonts(
 
 
 /* =========================================================
-   UPDATE UI
+   UPDATE CONTROLS
    ========================================================= */
 
 function updateControls() {
 
-  const a3 =
+  const isA3 =
     document
       .getElementById("paperSize")
       .value === "a3";
@@ -806,7 +870,7 @@ function updateControls() {
     .classList
     .toggle(
       "hidden",
-      !a3
+      !isA3
     );
 
 
@@ -815,7 +879,7 @@ function updateControls() {
     .classList
     .toggle(
       "hidden",
-      !a3
+      !isA3
     );
 
 
@@ -825,7 +889,7 @@ function updateControls() {
 
 
 /* =========================================================
-   CREATE PREVIEW
+   GENERATE PREVIEW
    ========================================================= */
 
 function generate() {
@@ -892,15 +956,17 @@ function generate() {
 
     const front =
       createPreviewPage(
-        layout,
-        fonts
+        layout
       );
 
 
     chunk.forEach(item => {
 
       front.grid.appendChild(
-        createFront(item, fonts)
+        createFront(
+          item,
+          fonts
+        )
       );
 
     });
@@ -927,8 +993,7 @@ function generate() {
 
     const back =
       createPreviewPage(
-        layout,
-        fonts
+        layout
       );
 
 
@@ -939,7 +1004,7 @@ function generate() {
     ) {
 
 
-      const startIndex =
+      const rowStart =
         row *
         layout.columns;
 
@@ -947,8 +1012,8 @@ function generate() {
       const rowItems =
         chunk
           .slice(
-            startIndex,
-            startIndex + layout.columns
+            rowStart,
+            rowStart + layout.columns
           )
           .reverse();
 
@@ -956,7 +1021,10 @@ function generate() {
       rowItems.forEach(item => {
 
         back.grid.appendChild(
-          createBack(item, fonts)
+          createBack(
+            item,
+            fonts
+          )
         );
 
       });
@@ -986,13 +1054,10 @@ function generate() {
 
 
 /* =========================================================
-   PREVIEW PAGE
+   CREATE PREVIEW PAGE
    ========================================================= */
 
-function createPreviewPage(
-  layout,
-  fonts
-) {
+function createPreviewPage(layout) {
 
   const page =
     document.createElement("div");
@@ -1030,15 +1095,18 @@ function createPreviewPage(
 
 
   return {
+
     page,
+
     grid
+
   };
 
 }
 
 
 /* =========================================================
-   FRONT
+   FRONT CARD
    ========================================================= */
 
 function createFront(
@@ -1054,22 +1122,28 @@ function createFront(
     "card front";
 
 
-  card.innerHTML = `
+  const english =
+    document.createElement("div");
 
-    <div
-      class="english"
-      style="
-        font-size:${fonts.english}px;
-      "
-    >
-      ${escapeHTML(item.english)}
-    </div>
 
-    <div class="creator">
-      MΛIRO
-    </div>
+  english.className =
+    "english";
 
-  `;
+
+  english.style.fontSize =
+    `${fonts.english}px`;
+
+
+  english.textContent =
+    item.english;
+
+
+  card.appendChild(
+    english
+  );
+
+
+  addCreator(card);
 
 
   return card;
@@ -1078,7 +1152,7 @@ function createFront(
 
 
 /* =========================================================
-   BACK
+   BACK CARD
    ========================================================= */
 
 function createBack(
@@ -1136,14 +1210,32 @@ function createBack(
       }
 
 
-      content.appendChild(line);
+      content.appendChild(
+        line
+      );
 
     }
   );
 
 
-  card.appendChild(content);
+  card.appendChild(
+    content
+  );
 
+
+  addCreator(card);
+
+
+  return card;
+
+}
+
+
+/* =========================================================
+   CREATOR
+   ========================================================= */
+
+function addCreator(card) {
 
   const creator =
     document.createElement("div");
@@ -1157,16 +1249,15 @@ function createBack(
     "MΛIRO";
 
 
-  card.appendChild(creator);
-
-
-  return card;
+  card.appendChild(
+    creator
+  );
 
 }
 
 
 /* =========================================================
-   EMPTY
+   EMPTY CARD
    ========================================================= */
 
 function createEmpty() {
@@ -1185,30 +1276,7 @@ function createEmpty() {
 
 
 /* =========================================================
-   HTML ESCAPE
-   ========================================================= */
-
-function escapeHTML(value) {
-
-  return String(value)
-    .replace(
-      /[&<>"']/g,
-      char => ({
-
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-
-      }[char])
-    );
-
-}
-
-
-/* =========================================================
-   CANVAS TEXT WRAPPING
+   TEXT WRAPPING
    ========================================================= */
 
 function wrapText(
@@ -1217,16 +1285,17 @@ function wrapText(
   maxWidth
 ) {
 
-  const characters =
+  const chars =
     [...String(text)];
 
 
   const lines = [];
 
+
   let current = "";
 
 
-  characters.forEach(char => {
+  chars.forEach(char => {
 
     const test =
       current + char;
@@ -1264,7 +1333,7 @@ function wrapText(
 
 
 /* =========================================================
-   DRAW CENTERED TEXT
+   CENTERED TEXT
    ========================================================= */
 
 function drawCenteredText(
@@ -1329,7 +1398,7 @@ function drawCenteredText(
 
 
 /* =========================================================
-   DRAW CARD BORDER
+   CARD BORDER
    ========================================================= */
 
 function drawBorder(
@@ -1337,8 +1406,7 @@ function drawBorder(
   x,
   y,
   width,
-  height,
-  lineWidth
+  height
 ) {
 
   ctx.strokeStyle =
@@ -1346,20 +1414,14 @@ function drawBorder(
 
 
   ctx.lineWidth =
-    lineWidth;
+    3;
 
-
-  /*
-    Half-pixel adjustment prevents
-    fuzzy borders while maintaining
-    exact card boundaries.
-  */
 
   ctx.strokeRect(
-    x + lineWidth / 2,
-    y + lineWidth / 2,
-    width - lineWidth,
-    height - lineWidth
+    x + 1.5,
+    y + 1.5,
+    width - 3,
+    height - 3
   );
 
 }
@@ -1448,19 +1510,22 @@ function drawFrontPage(
       x,
       y,
       cardWidth,
-      cardHeight,
-      3
+      cardHeight
     );
 
 
-    if (!data[i])
+    const item =
+      data[i];
+
+
+    if (!item)
       continue;
 
 
     drawCenteredText(
       ctx,
 
-      data[i].english,
+      item.english,
 
       x +
       cardWidth / 2,
@@ -1494,8 +1559,13 @@ function drawFrontPage(
 
     ctx.fillText(
       "MΛIRO",
-      x + cardWidth / 2,
-      y + cardHeight - 30
+
+      x +
+      cardWidth / 2,
+
+      y +
+      cardHeight -
+      30
     );
 
   }
@@ -1572,15 +1642,7 @@ function drawBackPage(
 
 
     /*
-      IMPORTANT:
-
-      Back-side row is horizontally mirrored.
-
-      Front:
-      A B
-
-      Back:
-      B A
+      Horizontal mirror for duplex printing.
     */
 
     const sourceIndex =
@@ -1609,8 +1671,7 @@ function drawBackPage(
       x,
       y,
       cardWidth,
-      cardHeight,
-      3
+      cardHeight
     );
 
 
@@ -1622,14 +1683,8 @@ function drawBackPage(
       continue;
 
 
-    const tokens =
-      item.tokens;
-
-
     const first =
-      tokens.length
-        ? tokens[0]
-        : "";
+      item.tokens[0] || "";
 
 
     drawCenteredText(
@@ -1641,8 +1696,7 @@ function drawBackPage(
       cardWidth / 2,
 
       y +
-      cardHeight / 2
-      -
+      cardHeight / 2 -
       fonts.japanese * 0.35,
 
       cardWidth * 0.88,
@@ -1654,27 +1708,22 @@ function drawBackPage(
 
 
     const remaining =
-      tokens.slice(1);
+      item.tokens.slice(1);
 
 
     if (remaining.length) {
 
-      const text =
-        remaining.join(" / ");
-
-
       drawCenteredText(
         ctx,
 
-        text,
+        remaining.join(" / "),
 
         x +
         cardWidth / 2,
 
         y +
-        cardHeight / 2
-        +
-        fonts.secondary * 1.0,
+        cardHeight / 2 +
+        fonts.secondary,
 
         cardWidth * 0.88,
 
@@ -1704,8 +1753,13 @@ function drawBackPage(
 
     ctx.fillText(
       "MΛIRO",
-      x + cardWidth / 2,
-      y + cardHeight - 30
+
+      x +
+      cardWidth / 2,
+
+      y +
+      cardHeight -
+      30
     );
 
   }
@@ -1714,7 +1768,7 @@ function drawBackPage(
 
 
 /* =========================================================
-   DOWNLOAD PDF
+   DIRECT PDF DOWNLOAD
    ========================================================= */
 
 async function downloadPDF() {
@@ -1729,7 +1783,7 @@ async function downloadPDF() {
   if (!input) {
 
     alert(
-      "Enter your vocabulary first."
+      "Please paste your vocabulary first."
     );
 
     return;
@@ -1744,7 +1798,8 @@ async function downloadPDF() {
   if (!data.length) {
 
     alert(
-      "No vocabulary found."
+      "No valid vocabulary entries found.\n\n" +
+      "Make sure every line contains a TAB between English and Japanese."
     );
 
     return;
@@ -1784,14 +1839,6 @@ async function downloadPDF() {
       getLayout();
 
 
-    /*
-      Exact physical PDF dimensions.
-
-      No margins.
-      No safe inset.
-      No browser scaling.
-    */
-
     const pdf =
       new jsPDF({
 
@@ -1818,6 +1865,10 @@ async function downloadPDF() {
       layout.rows;
 
 
+    let firstPage =
+      true;
+
+
     for (
       let start = 0;
       start < data.length;
@@ -1832,15 +1883,9 @@ async function downloadPDF() {
         );
 
 
-      /*
-        300 DPI canvas.
-
-        A4:
-        2480 × 3508
-
-        A3:
-        3508 × 4961
-      */
+      /* ================================================
+         FRONT
+         ================================================ */
 
       const frontCanvas =
         document.createElement("canvas");
@@ -1861,14 +1906,7 @@ async function downloadPDF() {
       );
 
 
-      const frontImage =
-        frontCanvas.toDataURL(
-          "image/jpeg",
-          0.97
-        );
-
-
-      if (start > 0) {
+      if (!firstPage) {
 
         pdf.addPage(
           [
@@ -1880,25 +1918,35 @@ async function downloadPDF() {
       }
 
 
-      /*
-        EXACTLY fills the PDF page.
-      */
+      firstPage =
+        false;
+
 
       pdf.addImage(
-        frontImage,
+        frontCanvas.toDataURL(
+          "image/jpeg",
+          0.97
+        ),
+
         "JPEG",
+
         0,
+
         0,
+
         layout.widthMM,
+
         layout.heightMM,
+
         undefined,
+
         "FAST"
       );
 
 
-      /*
-        BACK PAGE
-      */
+      /* ================================================
+         BACK
+         ================================================ */
 
       const backCanvas =
         document.createElement("canvas");
@@ -1919,13 +1967,6 @@ async function downloadPDF() {
       );
 
 
-      const backImage =
-        backCanvas.toDataURL(
-          "image/jpeg",
-          0.97
-        );
-
-
       pdf.addPage(
         [
           layout.widthMM,
@@ -1935,13 +1976,23 @@ async function downloadPDF() {
 
 
       pdf.addImage(
-        backImage,
+        backCanvas.toDataURL(
+          "image/jpeg",
+          0.97
+        ),
+
         "JPEG",
+
         0,
+
         0,
+
         layout.widthMM,
+
         layout.heightMM,
+
         undefined,
+
         "FAST"
       );
 
@@ -1962,7 +2013,7 @@ async function downloadPDF() {
 
 
     alert(
-      "PDF generation failed.\n\n" +
+      "PDF generation failed:\n\n" +
       error.message
     );
 
@@ -2001,7 +2052,7 @@ function clearAll() {
 
 
 /* =========================================================
-   INITIAL LOAD
+   INITIALIZE
    ========================================================= */
 
 updateControls();
