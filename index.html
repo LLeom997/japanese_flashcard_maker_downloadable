@@ -35,7 +35,7 @@ body {
 
 
 /* =========================================================
-   APP
+   APP / UI
    ========================================================= */
 
 .app {
@@ -56,6 +56,7 @@ h1 {
 textarea {
   width: 100%;
   min-height: 220px;
+
   padding: 12px;
 
   border: 1px solid #bbb;
@@ -70,13 +71,17 @@ textarea {
 .controls {
   display: flex;
   flex-wrap: wrap;
+
   align-items: center;
+
   gap: 10px;
+
   margin: 12px 0;
 }
 
 button,
 select {
+
   padding: 10px 16px;
 
   border-radius: 7px;
@@ -84,35 +89,48 @@ select {
   cursor: pointer;
 
   font-size: 14px;
+
   font-weight: 600;
 }
 
 button {
   border: 0;
+
   background: #222;
-  color: white;
+
+  color: #fff;
 }
 
 button.secondary {
   background: #ddd;
+
   color: #222;
 }
 
 select {
-  background: white;
+
+  background: #fff;
+
   color: #222;
+
   border: 1px solid #bbb;
 }
 
 .control-group {
+
   display: flex;
+
   align-items: center;
+
   gap: 6px;
 }
 
 .control-group label {
+
   font-size: 13px;
+
   color: #555;
+
   font-weight: 600;
 }
 
@@ -121,9 +139,11 @@ select {
 }
 
 .hint {
+
   margin: 8px 0 20px;
 
   font-size: 13px;
+
   line-height: 1.5;
 
   color: #666;
@@ -131,13 +151,17 @@ select {
 
 
 /* =========================================================
-   PREVIEW AREA
+   PREVIEW
    ========================================================= */
 
 #preview {
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   gap: 18px;
 }
 
@@ -145,24 +169,23 @@ select {
 /* =========================================================
    SHEET
 
-   The page has a fixed physical size.
+   IMPORTANT:
 
-   The CONTENT AREA is centered with identical
-   horizontal and vertical margins.
+   NO CSS MARGINS
+   NO CSS PADDING
 
-   --margin controls all four sides.
+   The grid itself occupies the ENTIRE physical page.
    ========================================================= */
 
 .sheet {
 
-  --margin: 8mm;
-
   width: var(--page-width);
+
   height: var(--page-height);
 
-  padding: var(--margin);
+  margin: 0;
 
-  margin: 0 auto;
+  padding: 0;
 
   background: #fff;
 
@@ -182,47 +205,48 @@ select {
 
   border: none;
 
-  /*
-    Prevent browser pagination.
-  */
   break-inside: avoid;
+
   page-break-inside: avoid;
 
   break-after: page;
+
   page-break-after: always;
 }
 
 
 /* =========================================================
    CARD
+
+   Each card gets an EXACT share of the full page.
    ========================================================= */
 
 .card {
 
-  /*
-    IMPORTANT:
-    min-width/min-height = 0 prevents grid overflow.
-  */
-
-  min-width: 0;
-  min-height: 0;
-
   width: 100%;
+
   height: 100%;
 
+  min-width: 0;
+
+  min-height: 0;
+
+  /*
+    Card cutting border.
+    This remains visible in PDF/print.
+  */
+
   border: 0.35mm solid #000;
+
+  background: #fff;
 
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   text-align: center;
-
-  /*
-    This padding is reduced automatically
-    for dense layouts by JavaScript.
-  */
 
   padding: var(--card-padding);
 
@@ -230,9 +254,8 @@ select {
 
   position: relative;
 
-  background: #fff;
-
   break-inside: avoid;
+
   page-break-inside: avoid;
 }
 
@@ -250,6 +273,7 @@ select {
   line-height: 1.1;
 
   max-width: 100%;
+
   max-height: 100%;
 
   overflow-wrap: anywhere;
@@ -263,6 +287,7 @@ select {
    ========================================================= */
 
 .back {
+
   flex-direction: column;
 
   gap: var(--back-gap);
@@ -275,11 +300,13 @@ select {
   flex-direction: column;
 
   align-items: center;
+
   justify-content: center;
 
   gap: var(--token-gap);
 
   max-width: 100%;
+
   max-height: 100%;
 
   overflow: hidden;
@@ -321,6 +348,7 @@ select {
   bottom: var(--creator-bottom);
 
   left: 0;
+
   right: 0;
 
   text-align: center;
@@ -336,7 +364,7 @@ select {
 
 
 /* =========================================================
-   EMPTY CELL
+   EMPTY CELLS
    ========================================================= */
 
 .empty {
@@ -356,13 +384,21 @@ select {
   html,
   body {
 
-    margin: 0 !important;
-    padding: 0 !important;
-
     width: 100%;
+
+    height: 100%;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
 
     background: #fff !important;
   }
+
+
+  /*
+    Hide the UI.
+  */
 
   .app > :not(#preview),
   h1,
@@ -371,6 +407,7 @@ select {
     display: none !important;
   }
 
+
   #preview {
 
     display: block !important;
@@ -378,23 +415,35 @@ select {
     width: 100% !important;
 
     margin: 0 !important;
+
     padding: 0 !important;
   }
+
+
+  /*
+    FULL PHYSICAL PAGE
+
+    No margin.
+    No padding.
+  */
 
   .sheet {
 
     width: var(--page-width) !important;
+
     height: var(--page-height) !important;
 
     min-width: var(--page-width) !important;
+
     max-width: var(--page-width) !important;
 
     min-height: var(--page-height) !important;
+
     max-height: var(--page-height) !important;
 
     margin: 0 !important;
 
-    padding: var(--margin) !important;
+    padding: 0 !important;
 
     display: grid !important;
 
@@ -415,35 +464,48 @@ select {
     border: none !important;
 
     break-inside: avoid !important;
+
     page-break-inside: avoid !important;
 
     break-after: page !important;
+
     page-break-after: always !important;
   }
+
 
   .sheet:last-child {
 
     break-after: auto !important;
+
     page-break-after: auto !important;
   }
+
+
+  /*
+    Keep card borders in print.
+  */
 
   .card {
 
     width: 100% !important;
+
     height: 100% !important;
 
     min-width: 0 !important;
+
     min-height: 0 !important;
 
     border: 0.35mm solid #000 !important;
 
     background: #fff !important;
 
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-
     overflow: hidden !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
   }
+
 
   .empty {
 
@@ -451,9 +513,39 @@ select {
 
     background: transparent !important;
   }
+
+}
+
+
+/* =========================================================
+   A4 PREVIEW
+
+   EXACTLY 210 × 297 mm
+   ========================================================= */
+
+.sheet.a4 {
+
+  width: 210mm;
+
+  height: 297mm;
+}
+
+
+/* =========================================================
+   A3 PREVIEW
+
+   EXACTLY 297 × 420 mm
+   ========================================================= */
+
+.sheet.a3 {
+
+  width: 297mm;
+
+  height: 420mm;
 }
 
 </style>
+
 </head>
 
 
@@ -471,8 +563,9 @@ select {
     🇯🇵 Japanese Vocabulary Flashcards
   </h1>
 
+
   <div class="sub">
-    Paste your vocabulary → generate double-sided printable flashcards.
+    Paste vocabulary → generate full-page double-sided flashcards.
   </div>
 
 
@@ -500,7 +593,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
   <div class="controls">
 
 
-    <!-- PAPER -->
+    <!-- PAPER SIZE -->
 
     <div class="control-group">
 
@@ -591,7 +684,8 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
           4
         </option>
 
-        <option value="5" selected>
+        <option value="5"
+                selected>
           5
         </option>
 
@@ -632,6 +726,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
       Clear
     </button>
 
+
   </div>
 
 
@@ -641,26 +736,23 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
   <div class="hint">
 
-    <b>A4:</b> fixed 2 × 5 = 10 cards/page.
+    <b>A4:</b>
+    2 × 5 = 10 cards, filling the complete 210 × 297 mm page.
 
     <br>
 
-    <b>A3:</b> choose cards per row and rows per page.
+    <b>A3:</b>
+    Choose cards per row and rows per page.
 
     <br>
 
-    The layout is automatically centered with equal
-    margins on all four sides.
+    <b>No CSS print margins:</b>
+    Set your printer/PDF margins separately when printing.
 
     <br>
 
-    Dense layouts automatically reduce card padding
-    and font sizes to prevent overflow.
-
-    <br>
-
-    <b>Print:</b>
-    Actual Size / 100% • Double-sided • Flip on long edge.
+    <b>Duplex:</b>
+    Double-sided → Flip on long edge.
 
   </div>
 
@@ -687,6 +779,7 @@ function updateLayoutControls() {
   const paper =
     document.getElementById("paperSize").value;
 
+
   const columnsGroup =
     document.getElementById("a3ColumnsGroup");
 
@@ -700,7 +793,9 @@ function updateLayoutControls() {
 
     rowsGroup.classList.remove("hidden");
 
-  } else {
+  }
+
+  else {
 
     columnsGroup.classList.add("hidden");
 
@@ -710,6 +805,7 @@ function updateLayoutControls() {
 
 
   generate();
+
 }
 
 
@@ -740,9 +836,7 @@ function getLayout() {
 
       pageWidth: "210mm",
 
-      pageHeight: "297mm",
-
-      margin: "8mm"
+      pageHeight: "297mm"
 
     };
 
@@ -759,6 +853,7 @@ function getLayout() {
       document.getElementById("columns").value,
       10
     );
+
 
   const rows =
     parseInt(
@@ -777,9 +872,7 @@ function getLayout() {
 
     pageWidth: "297mm",
 
-    pageHeight: "420mm",
-
-    margin: "10mm"
+    pageHeight: "420mm"
 
   };
 
@@ -787,107 +880,140 @@ function getLayout() {
 
 
 /* =========================================================
-   CALCULATE TYPOGRAPHY
+   TYPOGRAPHY
 
-   Automatically scales down as the grid becomes denser.
+   Automatically scales based on card size.
    ========================================================= */
 
-function getCardStyle(columns, rows, paper) {
+function getCardStyle(
+  columns,
+  rows,
+  paper
+) {
 
   const density =
     columns * rows;
 
 
   /*
-    Base values.
+    A4 2×5 gives large cards.
+    A3 starts slightly larger.
   */
 
-  let front = 42;
-  let kana = 28;
-  let back = 24;
-  let padding = 8;
+  let front =
+    paper === "a3" ? 48 : 42;
+
+  let kana =
+    paper === "a3" ? 32 : 28;
+
+  let back =
+    paper === "a3" ? 26 : 24;
+
+
+  let padding =
+    paper === "a3" ? 10 : 8;
+
+
   let gap = 7;
+
   let tokenGap = 5;
+
   let creator = 9;
+
   let creatorBottom = 4;
 
 
   /*
-    A3 gets slightly larger cards
-    when the grid is sparse.
+    Scale down dense layouts.
   */
 
-  if (paper === "a3") {
+  if (density >= 12) {
 
-    front = 48;
-    kana = 32;
-    back = 26;
-    padding = 10;
+    front *= 0.90;
+
+    kana *= 0.90;
+
+    back *= 0.90;
+
+    padding = 6;
+
+    gap = 5;
+
+    tokenGap = 4;
 
   }
 
 
-  /*
-    Scale according to density.
-
-    This prevents text from becoming
-    cramped when using 4×8, 5×8, etc.
-  */
-
   if (density >= 15) {
 
-    front *= 0.82;
-    kana *= 0.82;
-    back *= 0.82;
+    front *= 0.85;
+
+    kana *= 0.85;
+
+    back *= 0.85;
 
     padding = 5;
 
     gap = 4;
+
     tokenGap = 3;
+
+    creator = 8;
+
+  }
+
+
+  if (density >= 20) {
+
+    front *= 0.82;
+
+    kana *= 0.82;
+
+    back *= 0.82;
+
+    padding = 4;
+
+    gap = 3;
+
+    tokenGap = 2;
 
     creator = 7;
 
   }
 
-  else if (density >= 20) {
-
-    front *= 0.70;
-    kana *= 0.70;
-    back *= 0.70;
-
-    padding = 4;
-
-    gap = 3;
-    tokenGap = 2;
-
-    creator = 6;
-
-  }
-
 
   /*
-    Never let the typography
-    become absurdly large.
+    Minimum readable sizes.
   */
 
-  front = Math.max(front, 22);
-  kana = Math.max(kana, 18);
-  back = Math.max(back, 15);
+  front =
+    Math.max(front, 22);
+
+  kana =
+    Math.max(kana, 18);
+
+  back =
+    Math.max(back, 15);
 
 
   return {
 
     front: `${front}px`,
+
     kana: `${kana}px`,
+
     back: `${back}px`,
 
     padding: `${padding}mm`,
 
     gap: `${gap}px`,
+
     tokenGap: `${tokenGap}px`,
 
     creator: `${creator}px`,
-    creatorBottom: `${creatorBottom}mm`
+
+    creatorBottom:
+      `${creatorBottom}mm`
 
   };
 
@@ -906,6 +1032,7 @@ function parseVocabulary(text) {
   text
     .split(/\r?\n/)
     .forEach(line => {
+
 
       if (!line.trim())
         return;
@@ -1005,13 +1132,17 @@ function parseVocabulary(text) {
           + englishRaw.slice(1),
 
         hira,
+
         kata,
+
         romaji,
+
         kanji,
 
         extra,
 
-        rawColumn2: column2
+        rawColumn2:
+          column2
 
       });
 
@@ -1069,13 +1200,9 @@ function generate() {
 
 
   const cardsPerPage =
-    layout.columns * layout.rows;
+    layout.columns *
+    layout.rows;
 
-
-  /*
-    Typography automatically scales
-    based on selected grid density.
-  */
 
   const style =
     getCardStyle(
@@ -1089,7 +1216,8 @@ function generate() {
 
 
   /*
-    Generate every physical page.
+    One front + one back
+    for every physical page.
   */
 
   for (
@@ -1120,21 +1248,19 @@ function generate() {
     chunk.forEach(item => {
 
       front.appendChild(
-        createFrontCard(
-          item,
-          style
-        )
+        createFrontCard(item)
       );
 
     });
 
 
     /*
-      Fill the remainder of the page.
+      Fill unused cells.
     */
 
     while (
-      front.children.length < cardsPerPage
+      front.children.length <
+      cardsPerPage
     ) {
 
       front.appendChild(
@@ -1159,11 +1285,8 @@ function generate() {
 
 
     /*
-      Mirror each horizontal row.
-
-      This is correct for:
-      Double-sided
-      Flip on long edge
+      Mirror each row for
+      long-edge duplex printing.
     */
 
     for (
@@ -1172,13 +1295,16 @@ function generate() {
       row++
     ) {
 
+
       const rowStart =
-        row * layout.columns;
+        row *
+        layout.columns;
 
 
       const rowEnd =
         Math.min(
-          rowStart + layout.columns,
+          rowStart +
+          layout.columns,
           chunk.length
         );
 
@@ -1195,10 +1321,7 @@ function generate() {
       rowItems.forEach(item => {
 
         back.appendChild(
-          createBackCard(
-            item,
-            style
-          )
+          createBackCard(item)
         );
 
       });
@@ -1207,11 +1330,12 @@ function generate() {
 
 
     /*
-      Fill remaining cells.
+      Fill unused cells.
     */
 
     while (
-      back.children.length < cardsPerPage
+      back.children.length <
+      cardsPerPage
     ) {
 
       back.appendChild(
@@ -1232,7 +1356,10 @@ function generate() {
    CREATE SHEET
    ========================================================= */
 
-function createSheet(layout, style) {
+function createSheet(
+  layout,
+  style
+) {
 
   const sheet =
     document.createElement("div");
@@ -1241,10 +1368,6 @@ function createSheet(layout, style) {
   sheet.className =
     `sheet ${layout.paper}`;
 
-
-  /*
-    Physical page dimensions.
-  */
 
   sheet.style.setProperty(
     "--page-width",
@@ -1256,11 +1379,6 @@ function createSheet(layout, style) {
     layout.pageHeight
   );
 
-
-  /*
-    Grid dimensions.
-  */
-
   sheet.style.setProperty(
     "--cols",
     layout.columns
@@ -1271,20 +1389,6 @@ function createSheet(layout, style) {
     layout.rows
   );
 
-
-  /*
-    Equal margins.
-  */
-
-  sheet.style.setProperty(
-    "--margin",
-    layout.margin
-  );
-
-
-  /*
-    Typography.
-  */
 
   sheet.style.setProperty(
     "--front-font-size",
