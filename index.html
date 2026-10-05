@@ -9,7 +9,7 @@
 <style>
 
 /* =========================================================
-   PAGE
+   PAGE SETUP
    ========================================================= */
 
 @page {
@@ -29,13 +29,13 @@ body {
 
 body {
   font-family: Arial, sans-serif;
-  background: #f2f2f2;
+  background: #eeeeee;
   color: #222;
 }
 
 
 /* =========================================================
-   APP / UI
+   APPLICATION UI
    ========================================================= */
 
 .app {
@@ -71,7 +71,6 @@ textarea {
 .controls {
   display: flex;
   flex-wrap: wrap;
-
   align-items: center;
 
   gap: 10px;
@@ -81,7 +80,6 @@ textarea {
 
 button,
 select {
-
   padding: 10px 16px;
 
   border-radius: 7px;
@@ -89,7 +87,6 @@ select {
   cursor: pointer;
 
   font-size: 14px;
-
   font-weight: 600;
 }
 
@@ -97,40 +94,30 @@ button {
   border: 0;
 
   background: #222;
-
   color: #fff;
 }
 
 button.secondary {
   background: #ddd;
-
   color: #222;
 }
 
 select {
+  border: 1px solid #bbb;
 
   background: #fff;
-
   color: #222;
-
-  border: 1px solid #bbb;
 }
 
 .control-group {
-
   display: flex;
-
   align-items: center;
-
   gap: 6px;
 }
 
 .control-group label {
-
   font-size: 13px;
-
   color: #555;
-
   font-weight: 600;
 }
 
@@ -139,11 +126,9 @@ select {
 }
 
 .hint {
-
   margin: 8px 0 20px;
 
   font-size: 13px;
-
   line-height: 1.5;
 
   color: #666;
@@ -155,33 +140,50 @@ select {
    ========================================================= */
 
 #preview {
-
   display: flex;
 
   flex-direction: column;
 
   align-items: center;
 
-  gap: 18px;
+  gap: 20px;
 }
 
 
 /* =========================================================
-   SHEET
+   PHYSICAL PAGE
 
    IMPORTANT:
 
-   NO CSS MARGINS
-   NO CSS PADDING
+   The page itself represents the entire paper.
 
-   The grid itself occupies the ENTIRE physical page.
+   The actual card grid is INSIDE the safe inset.
+
+   This avoids browser/printer clipping.
    ========================================================= */
 
 .sheet {
 
-  width: var(--page-width);
+  --page-width: 210mm;
+  --page-height: 297mm;
 
+  --safe-top: 5mm;
+  --safe-right: 5mm;
+  --safe-bottom: 5mm;
+  --safe-left: 5mm;
+
+  width: var(--page-width);
   height: var(--page-height);
+
+  /*
+    The page is a flex container so that
+    the card grid is centered both ways.
+  */
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
 
   margin: 0;
 
@@ -189,51 +191,78 @@ select {
 
   background: #fff;
 
-  display: grid;
-
-  grid-template-columns:
-    repeat(var(--cols), 1fr);
-
-  grid-template-rows:
-    repeat(var(--rows), 1fr);
-
-  gap: 0;
-
   overflow: hidden;
 
-  box-shadow: 0 2px 12px rgba(0,0,0,0.20);
+  box-shadow:
+    0 2px 12px rgba(0,0,0,0.20);
 
   border: none;
 
   break-inside: avoid;
-
   page-break-inside: avoid;
 
   break-after: page;
-
   page-break-after: always;
 }
 
 
 /* =========================================================
-   CARD
+   ACTUAL CARD GRID
 
-   Each card gets an EXACT share of the full page.
+   Width and height are explicitly smaller than paper.
+
+   This creates the print-safe area.
+   ========================================================= */
+
+.sheet-grid {
+
+  width:
+    calc(
+      var(--page-width)
+      - var(--safe-left)
+      - var(--safe-right)
+    );
+
+  height:
+    calc(
+      var(--page-height)
+      - var(--safe-top)
+      - var(--safe-bottom)
+    );
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(var(--cols), minmax(0, 1fr));
+
+  grid-template-rows:
+    repeat(var(--rows), minmax(0, 1fr));
+
+  gap: 0;
+
+  overflow: hidden;
+
+  flex: 0 0 auto;
+
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+
+/* =========================================================
+   CARD
    ========================================================= */
 
 .card {
 
   width: 100%;
-
   height: 100%;
 
   min-width: 0;
-
   min-height: 0;
 
   /*
-    Card cutting border.
-    This remains visible in PDF/print.
+    Actual cutting border.
   */
 
   border: 0.35mm solid #000;
@@ -243,7 +272,6 @@ select {
   display: flex;
 
   align-items: center;
-
   justify-content: center;
 
   text-align: center;
@@ -255,7 +283,6 @@ select {
   position: relative;
 
   break-inside: avoid;
-
   page-break-inside: avoid;
 }
 
@@ -273,11 +300,9 @@ select {
   line-height: 1.1;
 
   max-width: 100%;
-
   max-height: 100%;
 
   overflow-wrap: anywhere;
-
   word-break: break-word;
 }
 
@@ -300,13 +325,11 @@ select {
   flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
   gap: var(--token-gap);
 
   max-width: 100%;
-
   max-height: 100%;
 
   overflow: hidden;
@@ -345,11 +368,10 @@ select {
 
   position: absolute;
 
-  bottom: var(--creator-bottom);
-
   left: 0;
-
   right: 0;
+
+  bottom: var(--creator-bottom);
 
   text-align: center;
 
@@ -364,7 +386,7 @@ select {
 
 
 /* =========================================================
-   EMPTY CELLS
+   EMPTY CELL
    ========================================================= */
 
 .empty {
@@ -376,7 +398,7 @@ select {
 
 
 /* =========================================================
-   PRINT
+   PRINT MODE
    ========================================================= */
 
 @media print {
@@ -384,20 +406,18 @@ select {
   html,
   body {
 
-    width: 100%;
-
-    height: 100%;
-
     margin: 0 !important;
-
     padding: 0 !important;
+
+    width: 100%;
+    height: 100%;
 
     background: #fff !important;
   }
 
 
   /*
-    Hide the UI.
+    Hide all UI.
   */
 
   .app > :not(#preview),
@@ -415,45 +435,37 @@ select {
     width: 100% !important;
 
     margin: 0 !important;
-
     padding: 0 !important;
   }
 
 
   /*
-    FULL PHYSICAL PAGE
+    Physical page.
 
-    No margin.
-    No padding.
+    IMPORTANT:
+    No transforms.
+    No scaling.
+    No negative margins.
   */
 
   .sheet {
 
     width: var(--page-width) !important;
-
     height: var(--page-height) !important;
 
     min-width: var(--page-width) !important;
-
     max-width: var(--page-width) !important;
 
     min-height: var(--page-height) !important;
-
     max-height: var(--page-height) !important;
 
     margin: 0 !important;
-
     padding: 0 !important;
 
-    display: grid !important;
+    display: flex !important;
 
-    grid-template-columns:
-      repeat(var(--cols), 1fr) !important;
-
-    grid-template-rows:
-      repeat(var(--rows), 1fr) !important;
-
-    gap: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
 
     overflow: hidden !important;
 
@@ -464,11 +476,9 @@ select {
     border: none !important;
 
     break-inside: avoid !important;
-
     page-break-inside: avoid !important;
 
     break-after: page !important;
-
     page-break-after: always !important;
   }
 
@@ -476,23 +486,55 @@ select {
   .sheet:last-child {
 
     break-after: auto !important;
-
     page-break-after: auto !important;
   }
 
 
   /*
-    Keep card borders in print.
+    Preserve the exact safe grid.
   */
+
+  .sheet-grid {
+
+    width:
+      calc(
+        var(--page-width)
+        - var(--safe-left)
+        - var(--safe-right)
+      ) !important;
+
+    height:
+      calc(
+        var(--page-height)
+        - var(--safe-top)
+        - var(--safe-bottom)
+      ) !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+      repeat(var(--cols), minmax(0, 1fr)) !important;
+
+    grid-template-rows:
+      repeat(var(--rows), minmax(0, 1fr)) !important;
+
+    gap: 0 !important;
+
+    overflow: hidden !important;
+
+    flex: 0 0 auto !important;
+
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
 
   .card {
 
     width: 100% !important;
-
     height: 100% !important;
 
     min-width: 0 !important;
-
     min-height: 0 !important;
 
     border: 0.35mm solid #000 !important;
@@ -502,7 +544,6 @@ select {
     overflow: hidden !important;
 
     break-inside: avoid !important;
-
     page-break-inside: avoid !important;
   }
 
@@ -514,34 +555,6 @@ select {
     background: transparent !important;
   }
 
-}
-
-
-/* =========================================================
-   A4 PREVIEW
-
-   EXACTLY 210 × 297 mm
-   ========================================================= */
-
-.sheet.a4 {
-
-  width: 210mm;
-
-  height: 297mm;
-}
-
-
-/* =========================================================
-   A3 PREVIEW
-
-   EXACTLY 297 × 420 mm
-   ========================================================= */
-
-.sheet.a3 {
-
-  width: 297mm;
-
-  height: 420mm;
 }
 
 </style>
@@ -565,7 +578,7 @@ select {
 
 
   <div class="sub">
-    Paste vocabulary → generate full-page double-sided flashcards.
+    Generate professional double-sided Japanese vocabulary flashcards.
   </div>
 
 
@@ -684,8 +697,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
           4
         </option>
 
-        <option value="5"
-                selected>
+        <option value="5" selected>
           5
         </option>
 
@@ -726,18 +738,17 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
       Clear
     </button>
 
-
   </div>
 
 
   <!-- =====================================================
-       HINT
+       SAFE PRINT INFORMATION
        ===================================================== -->
 
   <div class="hint">
 
     <b>A4:</b>
-    2 × 5 = 10 cards, filling the complete 210 × 297 mm page.
+    2 × 5 = 10 cards/page.
 
     <br>
 
@@ -746,13 +757,19 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
     <br>
 
-    <b>No CSS print margins:</b>
-    Set your printer/PDF margins separately when printing.
+    The card grid uses a
+    <b>5 mm safe inset</b>
+    on every side to prevent printer/PDF clipping.
 
     <br>
 
-    <b>Duplex:</b>
-    Double-sided → Flip on long edge.
+    The grid is automatically centered horizontally
+    and vertically.
+
+    <br>
+
+    <b>Print:</b>
+    Portrait • Actual Size / 100% • Double-sided • Flip on long edge.
 
   </div>
 
@@ -771,7 +788,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
 
 /* =========================================================
-   UPDATE CONTROLS
+   LAYOUT CONTROLS
    ========================================================= */
 
 function updateLayoutControls() {
@@ -805,7 +822,6 @@ function updateLayoutControls() {
 
 
   generate();
-
 }
 
 
@@ -821,7 +837,7 @@ function getLayout() {
 
   /*
     A4:
-    ALWAYS 2 × 5.
+    fixed 2 × 5.
   */
 
   if (paper === "a4") {
@@ -836,7 +852,15 @@ function getLayout() {
 
       pageWidth: "210mm",
 
-      pageHeight: "297mm"
+      pageHeight: "297mm",
+
+      safeTop: "5mm",
+
+      safeRight: "5mm",
+
+      safeBottom: "5mm",
+
+      safeLeft: "5mm"
 
     };
 
@@ -845,7 +869,7 @@ function getLayout() {
 
   /*
     A3:
-    USER CONTROLLED.
+    user controlled.
   */
 
   const columns =
@@ -872,7 +896,15 @@ function getLayout() {
 
     pageWidth: "297mm",
 
-    pageHeight: "420mm"
+    pageHeight: "420mm",
+
+    safeTop: "6mm",
+
+    safeRight: "6mm",
+
+    safeBottom: "6mm",
+
+    safeLeft: "6mm"
 
   };
 
@@ -880,9 +912,7 @@ function getLayout() {
 
 
 /* =========================================================
-   TYPOGRAPHY
-
-   Automatically scales based on card size.
+   TYPOGRAPHY SCALING
    ========================================================= */
 
 function getCardStyle(
@@ -895,23 +925,28 @@ function getCardStyle(
     columns * rows;
 
 
-  /*
-    A4 2×5 gives large cards.
-    A3 starts slightly larger.
-  */
-
   let front =
-    paper === "a3" ? 48 : 42;
+    paper === "a3"
+      ? 48
+      : 42;
+
 
   let kana =
-    paper === "a3" ? 32 : 28;
+    paper === "a3"
+      ? 32
+      : 28;
+
 
   let back =
-    paper === "a3" ? 26 : 24;
+    paper === "a3"
+      ? 26
+      : 24;
 
 
   let padding =
-    paper === "a3" ? 10 : 8;
+    paper === "a3"
+      ? 8
+      : 7;
 
 
   let gap = 7;
@@ -924,21 +959,19 @@ function getCardStyle(
 
 
   /*
-    Scale down dense layouts.
+    Automatically scale down
+    when cards become smaller.
   */
 
   if (density >= 12) {
 
     front *= 0.90;
-
     kana *= 0.90;
-
     back *= 0.90;
 
-    padding = 6;
+    padding = 5;
 
     gap = 5;
-
     tokenGap = 4;
 
   }
@@ -947,15 +980,12 @@ function getCardStyle(
   if (density >= 15) {
 
     front *= 0.85;
-
     kana *= 0.85;
-
     back *= 0.85;
 
-    padding = 5;
+    padding = 4;
 
     gap = 4;
-
     tokenGap = 3;
 
     creator = 8;
@@ -965,16 +995,13 @@ function getCardStyle(
 
   if (density >= 20) {
 
-    front *= 0.82;
+    front *= 0.80;
+    kana *= 0.80;
+    back *= 0.80;
 
-    kana *= 0.82;
-
-    back *= 0.82;
-
-    padding = 4;
+    padding = 3;
 
     gap = 3;
-
     tokenGap = 2;
 
     creator = 7;
@@ -983,7 +1010,7 @@ function getCardStyle(
 
 
   /*
-    Minimum readable sizes.
+    Prevent absurdly tiny text.
   */
 
   front =
@@ -1132,17 +1159,13 @@ function parseVocabulary(text) {
           + englishRaw.slice(1),
 
         hira,
-
         kata,
-
         romaji,
-
         kanji,
 
         extra,
 
-        rawColumn2:
-          column2
+        rawColumn2: column2
 
       });
 
@@ -1216,8 +1239,7 @@ function generate() {
 
 
   /*
-    One front + one back
-    for every physical page.
+    Process one physical page at a time.
   */
 
   for (
@@ -1247,7 +1269,7 @@ function generate() {
 
     chunk.forEach(item => {
 
-      front.appendChild(
+      front.grid.appendChild(
         createFrontCard(item)
       );
 
@@ -1259,18 +1281,20 @@ function generate() {
     */
 
     while (
-      front.children.length <
+      front.grid.children.length <
       cardsPerPage
     ) {
 
-      front.appendChild(
+      front.grid.appendChild(
         createEmptyCard()
       );
 
     }
 
 
-    preview.appendChild(front);
+    preview.appendChild(
+      front.sheet
+    );
 
 
     /* =====================================================
@@ -1285,8 +1309,19 @@ function generate() {
 
 
     /*
-      Mirror each row for
-      long-edge duplex printing.
+      Mirror every row.
+
+      Example:
+
+      FRONT
+      1  2
+      3  4
+      5  6
+
+      BACK
+      2  1
+      4  3
+      6  5
     */
 
     for (
@@ -1320,7 +1355,7 @@ function generate() {
 
       rowItems.forEach(item => {
 
-        back.appendChild(
+        back.grid.appendChild(
           createBackCard(item)
         );
 
@@ -1334,18 +1369,20 @@ function generate() {
     */
 
     while (
-      back.children.length <
+      back.grid.children.length <
       cardsPerPage
     ) {
 
-      back.appendChild(
+      back.grid.appendChild(
         createEmptyCard()
       );
 
     }
 
 
-    preview.appendChild(back);
+    preview.appendChild(
+      back.sheet
+    );
 
   }
 
@@ -1378,6 +1415,28 @@ function createSheet(
     "--page-height",
     layout.pageHeight
   );
+
+
+  sheet.style.setProperty(
+    "--safe-top",
+    layout.safeTop
+  );
+
+  sheet.style.setProperty(
+    "--safe-right",
+    layout.safeRight
+  );
+
+  sheet.style.setProperty(
+    "--safe-bottom",
+    layout.safeBottom
+  );
+
+  sheet.style.setProperty(
+    "--safe-left",
+    layout.safeLeft
+  );
+
 
   sheet.style.setProperty(
     "--cols",
@@ -1431,7 +1490,25 @@ function createSheet(
   );
 
 
-  return sheet;
+  /*
+    Grid lives inside the page.
+  */
+
+  const grid =
+    document.createElement("div");
+
+
+  grid.className =
+    "sheet-grid";
+
+
+  sheet.appendChild(grid);
+
+
+  return {
+    sheet,
+    grid
+  };
 
 }
 
@@ -1574,7 +1651,7 @@ function clearAll() {
 
 
 /* =========================================================
-   ESCAPE HTML
+   HTML ESCAPE
    ========================================================= */
 
 function esc(value) {
