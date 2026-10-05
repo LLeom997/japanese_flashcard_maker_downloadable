@@ -1,11 +1,18 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Japanese Vocabulary Flashcards</title>
 
 <style>
+
+  /* =====================================================
+     DEFAULT PAGE
+     ===================================================== */
+
   @page {
     size: A4 portrait;
     margin: 0;
@@ -15,9 +22,14 @@
     box-sizing: border-box;
   }
 
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: Arial, sans-serif;
-    margin: 0;
     background: #f3f3f3;
     color: #222;
   }
@@ -41,10 +53,14 @@
     width: 100%;
     min-height: 220px;
     padding: 12px;
+
     border: 1px solid #bbb;
     border-radius: 8px;
+
     font-family: monospace;
     font-size: 14px;
+
+    resize: vertical;
   }
 
   .controls {
@@ -57,13 +73,17 @@
   button,
   select {
     padding: 10px 16px;
-    border: 0;
+
     border-radius: 7px;
+
     cursor: pointer;
+
     font-weight: 600;
+    font-size: 14px;
   }
 
   button {
+    border: 0;
     background: #222;
     color: #fff;
   }
@@ -75,6 +95,7 @@
 
   select {
     background: #fff;
+    color: #222;
     border: 1px solid #bbb;
   }
 
@@ -82,7 +103,13 @@
     font-size: 13px;
     color: #666;
     margin: 8px 0 20px;
+    line-height: 1.5;
   }
+
+
+  /* =====================================================
+     PREVIEW
+     ===================================================== */
 
   #preview {
     display: flex;
@@ -90,50 +117,71 @@
     gap: 18px;
   }
 
+
   /* =====================================================
-     PAGE SIZE
+     SHEET
      ===================================================== */
 
   .sheet {
+
     background: #fff;
+
     padding: 8mm;
 
     display: grid;
+
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(5, 1fr);
 
     gap: 0;
 
+    overflow: hidden;
+
     box-shadow: 0 2px 12px #bbb;
 
-    overflow: hidden;
+    border: none;
   }
 
-  /* A4 */
-  .sheet.a4 {
-    width: 210mm;
-    height: 297mm;
-  }
-
-  /* A3 */
-  .sheet.a3 {
-    width: 297mm;
-    height: 420mm;
-  }
 
   /* =====================================================
-     CARDS
+     A4
+     ===================================================== */
+
+  .sheet.a4 {
+
+    width: 210mm;
+    height: 297mm;
+
+  }
+
+
+  /* =====================================================
+     A3
+     ===================================================== */
+
+  .sheet.a3 {
+
+    width: 297mm;
+    height: 420mm;
+
+  }
+
+
+  /* =====================================================
+     FLASHCARD
      ===================================================== */
 
   .card {
+
     /*
-      IMPORTANT:
-      No visible borders.
-      These cells are only layout containers.
+      Solid card border.
+      This WILL appear in PDF and physical printing.
     */
-    border: none;
+
+    border: 0.35mm solid #000;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -142,180 +190,328 @@
     padding: 10mm;
 
     overflow: hidden;
+
     position: relative;
+
+    background: #fff;
   }
+
+
+  /* =====================================================
+     FRONT
+     ===================================================== */
 
   .front .english {
+
     font-size: 42px;
+
     font-weight: 700;
+
     line-height: 1.15;
+
   }
+
+
+  /* =====================================================
+     BACK
+     ===================================================== */
 
   .back {
+
     flex-direction: column;
+
     gap: 7px;
-  }
 
-  .kana {
-    font-size: 28px;
-    font-weight: 700;
-  }
-
-  .katakana {
-    font-size: 20px;
-    color: #555;
-  }
-
-  .romaji {
-    font-size: 18px;
-    font-style: italic;
-  }
-
-  .kanji {
-    font-size: 42px;
-  }
-
-  .label {
-    font-size: 10px;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
 
   .back-content {
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
+    justify-content: center;
+
     gap: 5px;
+
+    max-width: 100%;
+
+  }
+
+  .kana {
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+  }
+
+  .katakana {
+
+    font-size: 20px;
+
+    color: #555;
+
+  }
+
+  .romaji {
+
+    font-size: 18px;
+
+    font-style: italic;
+
+  }
+
+  .kanji {
+
+    font-size: 42px;
+
   }
 
   .back-row {
+
     font-size: 24px;
+
     line-height: 1.15;
+
   }
 
+
+  /* =====================================================
+     CREATOR
+     ===================================================== */
+
   .creator {
+
     position: absolute;
+
     bottom: 4mm;
+
     left: 0;
     right: 0;
 
     text-align: center;
 
     font-size: 9px;
+
     letter-spacing: 2px;
+
     color: #999;
+
     font-weight: 600;
+
   }
 
-  .empty {
-    border: none;
-  }
 
   /* =====================================================
-     PRINT
+     EMPTY CELLS
+     ===================================================== */
+
+  .empty {
+
+    border: none !important;
+
+    background: transparent;
+
+  }
+
+
+  /* =====================================================
+     PRINT / PDF
      ===================================================== */
 
   @media print {
 
     html,
     body {
+
       margin: 0;
       padding: 0;
+
       background: #fff;
+
     }
+
+
+    /* Hide UI */
 
     .app > :not(#preview),
     h1,
     .sub {
+
       display: none !important;
+
     }
+
 
     #preview {
+
       display: block;
+
+      margin: 0;
+      padding: 0;
+
     }
 
-    /*
-      Remove ALL screen-only effects during export.
-    */
+
+    /* Remove screen shadow only */
+
     .sheet {
+
       margin: 0;
-      padding: 8mm;
 
       box-shadow: none !important;
+
       background: #fff !important;
 
+      border: none !important;
+
+      outline: none !important;
+
       page-break-after: always;
+
       break-after: page;
 
-      /*
-        IMPORTANT:
-        No border anywhere.
-      */
-      border: none !important;
-      outline: none !important;
     }
+
 
     .sheet:last-child {
+
       page-break-after: auto;
+
       break-after: auto;
+
     }
 
-    .card,
-    .empty {
-      border: none !important;
-      outline: none !important;
-    }
 
     /*
-      Prevent browser from shrinking the layout.
+      IMPORTANT:
+      Do NOT remove .card borders here.
+
+      They must remain visible in
+      printed/PDF output.
     */
+
+
+    .card {
+
+      border: 0.35mm solid #000 !important;
+
+      background: #fff !important;
+
+    }
+
+
+    .empty {
+
+      border: none !important;
+
+      background: transparent !important;
+
+    }
+
+
+    /* Exact physical page sizes */
+
     .sheet.a4 {
+
       width: 210mm;
       height: 297mm;
+
     }
 
     .sheet.a3 {
+
       width: 297mm;
       height: 420mm;
+
     }
+
   }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="app">
 
-  <h1>🇯🇵 Japanese Vocabulary Flashcards</h1>
+
+  <h1>
+    🇯🇵 Japanese Vocabulary Flashcards
+  </h1>
+
 
   <div class="sub">
+
     Paste your CSV → generate double-sided flashcards → print.
+
   </div>
 
-  <textarea id="csv" placeholder="Paste your vocabulary like this:
+
+  <!-- ===================================================
+       INPUT
+       =================================================== -->
+
+  <textarea
+    id="csv"
+    placeholder="Paste your vocabulary like this:
 I / me	わたし / 私 / watashi
 you	あなた / あなた / anata
 person	ひと / 人 / hito
 friend	ともだち / 友達 / tomodachi
 
 One vocabulary item per line:
-English<TAB>Hiragana / Katakana / Kanji / Romaji"></textarea>
+English<TAB>Hiragana / Katakana / Kanji / Romaji"
+  ></textarea>
+
+
+  <!-- ===================================================
+       CONTROLS
+       =================================================== -->
 
   <div class="controls">
 
-    <select id="paperSize" onchange="generate()">
-      <option value="a4">A4 Portrait</option>
-      <option value="a3">A3 Portrait</option>
+
+    <select
+      id="paperSize"
+      onchange="generate()"
+    >
+
+      <option value="a4">
+        A4 Portrait
+      </option>
+
+      <option value="a3">
+        A3 Portrait
+      </option>
+
     </select>
 
+
     <button onclick="generate()">
+
       Generate Flashcards
+
     </button>
 
-    <button class="secondary" onclick="window.print()">
+
+    <button
+      class="secondary"
+      onclick="window.print()"
+    >
+
       Print / Save PDF
+
     </button>
+
 
     <button
       class="secondary"
@@ -324,139 +520,264 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"></textarea>
         document.getElementById('preview').innerHTML=''
       "
     >
+
       Clear
+
     </button>
 
+
   </div>
+
+
+  <!-- ===================================================
+       PRINT INSTRUCTIONS
+       =================================================== -->
 
   <div class="hint">
-    Paste <b>English[TAB]Japanese / Japanese / Romaji</b>,
-    one item per line.<br>
 
-    <b>A4:</b> 210 × 297 mm &nbsp; | &nbsp;
-    <b>A3:</b> 297 × 420 mm<br>
+    Paste
+    <b>English[TAB]Japanese / Japanese / Romaji</b>,
+    one item per line.
+
+    <br>
+
+    <b>A4:</b> 210 × 297 mm
+    &nbsp; | &nbsp;
+    <b>A3:</b> 297 × 420 mm
+
+    <br>
 
     Print:
-    <b>Actual Size / 100% • Double-sided • Flip on long edge</b>
+    <b>
+      Actual Size / 100%
+      • Double-sided
+      • Flip on long edge
+    </b>
+
   </div>
 
+
+  <!-- ===================================================
+       PREVIEW
+       =================================================== -->
+
   <div id="preview"></div>
+
 
 </div>
 
 
 <script>
 
+
+/* =====================================================
+   PARSE VOCABULARY
+   ===================================================== */
+
 function parseVocabulary(text) {
 
   const rows = [];
 
-  text.split(/\r?\n/).forEach(line => {
 
-    if (!line.trim()) return;
+  text
+    .split(/\r?\n/)
+    .forEach(line => {
 
-    const tab = line.indexOf("\t");
+      if (!line.trim()) return;
 
-    if (tab < 0) return;
 
-    const englishRaw = line.slice(0, tab).trim();
-    const column2 = line.slice(tab + 1).trim();
+      /*
+        Column 1 = English
+        Column 2 = everything after first TAB
+      */
 
-    if (!englishRaw || !column2) return;
+      const tab =
+        line.indexOf("\t");
 
-    const tokens = column2
-      .split(/\s*\/\s*/)
-      .map(x => x.trim())
-      .filter(Boolean);
 
-    let hira = "";
-    let kata = "";
-    let romaji = "";
-    let kanji = "";
+      if (tab < 0) return;
 
-    const extra = [];
 
-    tokens.forEach(t => {
+      const englishRaw =
+        line
+          .slice(0, tab)
+          .trim();
 
-      if (/^[ぁ-ゖー\s・]+$/.test(t) && !hira) {
-        hira = t;
-      }
 
-      else if (/^[ァ-ヺー\s・]+$/.test(t) && !kata) {
-        kata = t;
-      }
+      const column2 =
+        line
+          .slice(tab + 1)
+          .trim();
 
-      else if (
-        /^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'・-]*$/.test(t)
-        && !romaji
-      ) {
-        romaji = t;
-      }
 
-      else if (
-        /[\u3400-\u9FFF\uF900-\uFAFF]/.test(t)
-        && !kanji
-      ) {
-        kanji = t;
-      }
+      if (!englishRaw || !column2)
+        return;
 
-      else {
-        extra.push(t);
-      }
+
+      /*
+        Split Japanese information
+        using slash.
+      */
+
+      const tokens =
+        column2
+          .split(/\s*\/\s*/)
+          .map(x => x.trim())
+          .filter(Boolean);
+
+
+      let hira = "";
+      let kata = "";
+      let romaji = "";
+      let kanji = "";
+
+      const extra = [];
+
+
+      tokens.forEach(t => {
+
+
+        /* Hiragana */
+
+        if (
+          /^[ぁ-ゖー\s・]+$/.test(t)
+          && !hira
+        ) {
+
+          hira = t;
+
+        }
+
+
+        /* Katakana */
+
+        else if (
+          /^[ァ-ヺー\s・]+$/.test(t)
+          && !kata
+        ) {
+
+          kata = t;
+
+        }
+
+
+        /* Romaji */
+
+        else if (
+          /^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'・-]*$/.test(t)
+          && !romaji
+        ) {
+
+          romaji = t;
+
+        }
+
+
+        /* Kanji */
+
+        else if (
+          /[\u3400-\u9FFF\uF900-\uFAFF]/.test(t)
+          && !kanji
+        ) {
+
+          kanji = t;
+
+        }
+
+
+        /* Anything else */
+
+        else {
+
+          extra.push(t);
+
+        }
+
+      });
+
+
+      rows.push({
+
+        english:
+          englishRaw.charAt(0).toUpperCase()
+          + englishRaw.slice(1),
+
+        hira,
+        kata,
+        romaji,
+        kanji,
+
+        extra,
+
+        rawColumn2: column2
+
+      });
 
     });
 
-    rows.push({
-      english:
-        englishRaw.charAt(0).toUpperCase()
-        + englishRaw.slice(1),
-
-      hira,
-      kata,
-      romaji,
-      kanji,
-      extra,
-
-      rawColumn2: column2
-    });
-
-  });
 
   return rows;
+
 }
 
 
+/* =====================================================
+   GENERATE
+   ===================================================== */
+
 function generate() {
 
+
   const text =
-    document.getElementById("csv").value.trim();
+    document
+      .getElementById("csv")
+      .value
+      .trim();
+
 
   if (!text) {
-    alert("Paste your vocabulary first.");
+
+    alert(
+      "Paste your vocabulary first."
+    );
+
     return;
+
   }
 
-  const data = parseVocabulary(text);
+
+  const data =
+    parseVocabulary(text);
+
 
   if (!data.length) {
+
     alert(
       "No vocabulary found. Use: English<TAB>Hiragana / Kanji / Romaji"
     );
+
     return;
+
   }
+
 
   const preview =
     document.getElementById("preview");
 
+
   const paperSize =
     document.getElementById("paperSize").value;
 
+
   preview.innerHTML = "";
+
 
   /*
     10 cards per sheet:
+
     2 columns × 5 rows
   */
+
 
   for (
     let start = 0;
@@ -464,16 +785,21 @@ function generate() {
     start += 10
   ) {
 
+
     const chunk =
-      data.slice(start, start + 10);
+      data.slice(
+        start,
+        start + 10
+      );
 
 
-    /* =====================================================
-       FRONT
-       ===================================================== */
+    /* =================================================
+       FRONT SHEET
+       ================================================= */
 
     const front =
       document.createElement("div");
+
 
     front.className =
       `sheet ${paperSize}`;
@@ -481,66 +807,103 @@ function generate() {
 
     chunk.forEach(d => {
 
+
       const c =
         document.createElement("div");
+
 
       c.className =
         "card front";
 
+
       c.innerHTML = `
+
         <div class="english">
+
           ${esc(d.english)}
+
         </div>
+
 
         <div class="creator">
+
           MΛIRO
+
         </div>
+
       `;
 
+
       front.appendChild(c);
+
 
     });
 
 
-    while (front.children.length < 10) {
+    /*
+      Fill unused cells.
+    */
+
+    while (
+      front.children.length < 10
+    ) {
+
 
       const e =
         document.createElement("div");
 
+
       e.className =
         "card empty";
+
 
       front.appendChild(e);
 
     }
 
+
     preview.appendChild(front);
 
 
-    /* =====================================================
-       BACK
-       ===================================================== */
+    /* =================================================
+       BACK SHEET
+       ================================================= */
 
     const back =
       document.createElement("div");
+
 
     back.className =
       `sheet ${paperSize}`;
 
 
     /*
-      Mirror every row for duplex printing.
+      Mirror each 2-column row.
 
-      Front:
-      [1] [2]
-      [3] [4]
+      FRONT:
 
-      Back:
-      [2] [1]
-      [4] [3]
+      [ 1 ] [ 2 ]
+      [ 3 ] [ 4 ]
+      [ 5 ] [ 6 ]
+      [ 7 ] [ 8 ]
+      [ 9 ] [10]
+
+
+      BACK:
+
+      [ 2 ] [ 1 ]
+      [ 4 ] [ 3 ]
+      [ 6 ] [ 5 ]
+      [ 8 ] [ 7 ]
+      [10 ] [ 9 ]
+
+      This keeps the cards aligned
+      when duplex printing on the
+      long edge.
     */
 
     const mirrored = [];
+
 
     for (
       let i = 0;
@@ -548,7 +911,10 @@ function generate() {
       i += 2
     ) {
 
-      if (i + 1 < chunk.length) {
+
+      if (
+        i + 1 < chunk.length
+      ) {
 
         mirrored.push(
           chunk[i + 1],
@@ -559,7 +925,9 @@ function generate() {
 
       else {
 
-        mirrored.push(chunk[i]);
+        mirrored.push(
+          chunk[i]
+        );
 
       }
 
@@ -568,12 +936,19 @@ function generate() {
 
     mirrored.forEach(d => {
 
+
       const c =
         document.createElement("div");
+
 
       c.className =
         "card back";
 
+
+      /*
+        Preserve every slash-separated
+        Japanese token.
+      */
 
       const allTokens =
         d.rawColumn2
@@ -586,38 +961,67 @@ function generate() {
 
         <div class="back-content">
 
-          ${allTokens.map((t, i) => `
+          ${
+            allTokens
+              .map(
+                (t, i) => `
 
-            <div class="${i === 0 ? "kana" : "back-row"}">
-              ${esc(t)}
-            </div>
+                  <div
+                    class="${
+                      i === 0
+                        ? "kana"
+                        : "back-row"
+                    }"
+                  >
 
-          `).join("")}
+                    ${esc(t)}
+
+                  </div>
+
+                `
+              )
+              .join("")
+          }
 
         </div>
 
+
         <div class="creator">
+
           MΛIRO
+
         </div>
 
       `;
 
+
       back.appendChild(c);
+
 
     });
 
 
-    while (back.children.length < 10) {
+    /*
+      Fill unused cells.
+    */
+
+    while (
+      back.children.length < 10
+    ) {
+
 
       const e =
         document.createElement("div");
 
+
       e.className =
         "card empty";
+
 
       back.appendChild(e);
 
     }
+
 
     preview.appendChild(back);
 
@@ -626,23 +1030,32 @@ function generate() {
 }
 
 
+/* =====================================================
+   HTML ESCAPE
+   ===================================================== */
+
 function esc(s) {
 
   return String(s).replace(
     /[&<>"']/g,
 
     m => ({
+
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
       "'": "&#039;"
+
     }[m])
+
   );
 
 }
 
 </script>
 
+
 </body>
 </html>
+```
