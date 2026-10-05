@@ -8,309 +8,442 @@
 
 <style>
 
-  /* =====================================================
-     PRINT PAGE
-     ===================================================== */
+/* =========================================================
+   PAGE
+   ========================================================= */
 
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
 
-  * {
-    box-sizing: border-box;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  color: #222;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 20px;
+}
+
+h1 {
+  margin: 0 0 8px;
+}
+
+.sub {
+  color: #666;
+  margin-bottom: 18px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: 12px;
+
+  border: 1px solid #bbb;
+  border-radius: 8px;
+
+  font-family: monospace;
+  font-size: 14px;
+
+  resize: vertical;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+button,
+select {
+  padding: 10px 16px;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+button {
+  border: 0;
+  background: #222;
+  color: white;
+}
+
+button.secondary {
+  background: #ddd;
+  color: #222;
+}
+
+select {
+  background: white;
+  color: #222;
+  border: 1px solid #bbb;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-group label {
+  font-size: 13px;
+  color: #555;
+  font-weight: 600;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.hint {
+  margin: 8px 0 20px;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #666;
+}
+
+
+/* =========================================================
+   PREVIEW AREA
+   ========================================================= */
+
+#preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+
+/* =========================================================
+   SHEET
+
+   The page has a fixed physical size.
+
+   The CONTENT AREA is centered with identical
+   horizontal and vertical margins.
+
+   --margin controls all four sides.
+   ========================================================= */
+
+.sheet {
+
+  --margin: 8mm;
+
+  width: var(--page-width);
+  height: var(--page-height);
+
+  padding: var(--margin);
+
+  margin: 0 auto;
+
+  background: #fff;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(var(--cols), 1fr);
+
+  grid-template-rows:
+    repeat(var(--rows), 1fr);
+
+  gap: 0;
+
+  overflow: hidden;
+
+  box-shadow: 0 2px 12px rgba(0,0,0,0.20);
+
+  border: none;
+
+  /*
+    Prevent browser pagination.
+  */
+  break-inside: avoid;
+  page-break-inside: avoid;
+
+  break-after: page;
+  page-break-after: always;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.card {
+
+  /*
+    IMPORTANT:
+    min-width/min-height = 0 prevents grid overflow.
+  */
+
+  min-width: 0;
+  min-height: 0;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0.35mm solid #000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  /*
+    This padding is reduced automatically
+    for dense layouts by JavaScript.
+  */
+
+  padding: var(--card-padding);
+
+  overflow: hidden;
+
+  position: relative;
+
+  background: #fff;
+
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+
+/* =========================================================
+   FRONT
+   ========================================================= */
+
+.front .english {
+
+  font-size: var(--front-font-size);
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  overflow-wrap: anywhere;
+
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.back {
+  flex-direction: column;
+
+  gap: var(--back-gap);
+}
+
+.back-content {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--token-gap);
+
+  max-width: 100%;
+  max-height: 100%;
+
+  overflow: hidden;
+}
+
+.kana {
+
+  font-size: var(--kana-font-size);
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  max-width: 100%;
+
+  overflow-wrap: anywhere;
+}
+
+.back-row {
+
+  font-size: var(--back-font-size);
+
+  line-height: 1.1;
+
+  max-width: 100%;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   CREATOR
+   ========================================================= */
+
+.creator {
+
+  position: absolute;
+
+  bottom: var(--creator-bottom);
+
+  left: 0;
+  right: 0;
+
+  text-align: center;
+
+  font-size: var(--creator-size);
+
+  letter-spacing: 2px;
+
+  color: #999;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPTY CELL
+   ========================================================= */
+
+.empty {
+
+  border: none !important;
+
+  background: transparent !important;
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
 
   html,
   body {
-    margin: 0;
-    padding: 0;
-  }
 
-  body {
-    font-family: Arial, sans-serif;
-    background: #f3f3f3;
-    color: #222;
-  }
+    margin: 0 !important;
+    padding: 0 !important;
 
-
-  /* =====================================================
-     APP / UI
-     ===================================================== */
-
-  .app {
-    max-width: 1100px;
-    margin: 24px auto;
-    padding: 20px;
-  }
-
-  h1 {
-    margin: 0 0 8px;
-  }
-
-  .sub {
-    color: #666;
-    margin-bottom: 18px;
-  }
-
-  textarea {
     width: 100%;
-    min-height: 220px;
-    padding: 12px;
 
-    border: 1px solid #bbb;
-    border-radius: 8px;
-
-    font-family: monospace;
-    font-size: 14px;
-
-    resize: vertical;
+    background: #fff !important;
   }
 
-  .controls {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: 12px 0;
-  }
+  .app > :not(#preview),
+  h1,
+  .sub {
 
-  button,
-  select {
-    padding: 10px 16px;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  button {
-    border: 0;
-    background: #222;
-    color: #fff;
-  }
-
-  button.secondary {
-    background: #ddd;
-    color: #222;
-  }
-
-  select {
-    background: #fff;
-    color: #222;
-    border: 1px solid #bbb;
-  }
-
-  .control-group {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .control-group label {
-    font-size: 13px;
-    color: #555;
-    font-weight: 600;
-  }
-
-  .hidden {
     display: none !important;
   }
 
-  .hint {
-    font-size: 13px;
-    color: #666;
-    margin: 8px 0 20px;
-    line-height: 1.5;
-  }
-
-
-  /* =====================================================
-     PREVIEW
-     ===================================================== */
-
   #preview {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
   }
-
-
-  /* =====================================================
-     SHEET
-
-     CSS variables are controlled by JavaScript:
-
-       --cols = cards per row
-       --rows = rows per page
-       --page-width
-       --page-height
-     ===================================================== */
 
   .sheet {
 
-    width: var(--page-width);
-    height: var(--page-height);
+    width: var(--page-width) !important;
+    height: var(--page-height) !important;
 
-    padding: 8mm;
+    min-width: var(--page-width) !important;
+    max-width: var(--page-width) !important;
 
-    background: #fff;
+    min-height: var(--page-height) !important;
+    max-height: var(--page-height) !important;
 
-    display: grid;
+    margin: 0 !important;
+
+    padding: var(--margin) !important;
+
+    display: grid !important;
 
     grid-template-columns:
-      repeat(var(--cols), 1fr);
+      repeat(var(--cols), 1fr) !important;
 
     grid-template-rows:
-      repeat(var(--rows), 1fr);
+      repeat(var(--rows), 1fr) !important;
 
-    gap: 0;
+    gap: 0 !important;
 
-    overflow: hidden;
+    overflow: hidden !important;
 
-    box-shadow: 0 2px 12px #bbb;
+    background: #fff !important;
 
-    border: none;
+    box-shadow: none !important;
 
-    box-sizing: border-box;
+    border: none !important;
 
-    break-inside: avoid;
-    page-break-inside: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
 
-    break-after: page;
-    page-break-after: always;
+    break-after: page !important;
+    page-break-after: always !important;
   }
 
+  .sheet:last-child {
 
-  /* =====================================================
-     FLASHCARD
-     ===================================================== */
+    break-after: auto !important;
+    page-break-after: auto !important;
+  }
 
   .card {
 
-    min-width: 0;
-    min-height: 0;
+    width: 100% !important;
+    height: 100% !important;
 
-    border: 0.35mm solid #000;
+    min-width: 0 !important;
+    min-height: 0 !important;
 
-    display: flex;
+    border: 0.35mm solid #000 !important;
 
-    align-items: center;
-    justify-content: center;
+    background: #fff !important;
 
-    text-align: center;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
 
-    padding: 8mm;
-
-    overflow: hidden;
-
-    position: relative;
-
-    background: #fff;
-
-    break-inside: avoid;
-    page-break-inside: avoid;
+    overflow: hidden !important;
   }
-
-
-  /* =====================================================
-     FRONT
-     ===================================================== */
-
-  .front .english {
-
-    font-size: 42px;
-
-    font-weight: 700;
-
-    line-height: 1.15;
-
-    overflow-wrap: break-word;
-
-    max-width: 100%;
-  }
-
-
-  /* =====================================================
-     BACK
-     ===================================================== */
-
-  .back {
-
-    flex-direction: column;
-
-    gap: 7px;
-  }
-
-  .back-content {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 5px;
-
-    max-width: 100%;
-
-    max-height: 100%;
-
-    overflow: hidden;
-  }
-
-  .kana {
-
-    font-size: 28px;
-
-    font-weight: 700;
-
-    line-height: 1.2;
-  }
-
-  .back-row {
-
-    font-size: 24px;
-
-    line-height: 1.15;
-
-    overflow-wrap: break-word;
-  }
-
-
-  /* =====================================================
-     CREATOR
-     ===================================================== */
-
-  .creator {
-
-    position: absolute;
-
-    bottom: 4mm;
-
-    left: 0;
-    right: 0;
-
-    text-align: center;
-
-    font-size: 9px;
-
-    letter-spacing: 2px;
-
-    color: #999;
-
-    font-weight: 600;
-  }
-
-
-  /* =====================================================
-     EMPTY CELLS
-     ===================================================== */
 
   .empty {
 
@@ -318,111 +451,9 @@
 
     background: transparent !important;
   }
-
-
-  /* =====================================================
-     PRINT
-     ===================================================== */
-
-  @media print {
-
-    html,
-    body {
-
-      margin: 0 !important;
-      padding: 0 !important;
-
-      background: #fff !important;
-
-    }
-
-    .app > :not(#preview),
-    h1,
-    .sub {
-
-      display: none !important;
-
-    }
-
-    #preview {
-
-      display: block !important;
-
-      margin: 0 !important;
-      padding: 0 !important;
-
-    }
-
-    .sheet {
-
-      width: var(--page-width) !important;
-      height: var(--page-height) !important;
-
-      min-width: var(--page-width) !important;
-      max-width: var(--page-width) !important;
-
-      min-height: var(--page-height) !important;
-      max-height: var(--page-height) !important;
-
-      margin: 0 !important;
-
-      padding: 8mm !important;
-
-      display: grid !important;
-
-      grid-template-columns:
-        repeat(var(--cols), 1fr) !important;
-
-      grid-template-rows:
-        repeat(var(--rows), 1fr) !important;
-
-      gap: 0 !important;
-
-      overflow: hidden !important;
-
-      box-shadow: none !important;
-
-      border: none !important;
-
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
-
-      break-after: page !important;
-      page-break-after: always !important;
-    }
-
-    .sheet:last-child {
-
-      break-after: auto !important;
-      page-break-after: auto !important;
-    }
-
-    .card {
-
-      min-width: 0 !important;
-      min-height: 0 !important;
-
-      border: 0.35mm solid #000 !important;
-
-      background: #fff !important;
-
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
-
-      overflow: hidden !important;
-    }
-
-    .empty {
-
-      border: none !important;
-
-      background: transparent !important;
-    }
-
-  }
+}
 
 </style>
-
 </head>
 
 
@@ -432,26 +463,22 @@
 <div class="app">
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        HEADER
-       =================================================== -->
+       ===================================================== -->
 
   <h1>
     🇯🇵 Japanese Vocabulary Flashcards
   </h1>
 
-
   <div class="sub">
-
-    Paste your vocabulary → generate printable
-    double-sided flashcards.
-
+    Paste your vocabulary → generate double-sided printable flashcards.
   </div>
 
 
-  <!-- ===================================================
-       VOCABULARY INPUT
-       =================================================== -->
+  <!-- =====================================================
+       INPUT
+       ===================================================== -->
 
   <textarea
     id="csv"
@@ -466,18 +493,18 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
   ></textarea>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        CONTROLS
-       =================================================== -->
+       ===================================================== -->
 
   <div class="controls">
 
 
-    <!-- PAPER SIZE -->
+    <!-- PAPER -->
 
     <div class="control-group">
 
-      <label for="paperSize">
+      <label>
         Paper:
       </label>
 
@@ -506,7 +533,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
       class="control-group hidden"
     >
 
-      <label for="columns">
+      <label>
         Cards / Row:
       </label>
 
@@ -543,7 +570,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
       class="control-group hidden"
     >
 
-      <label for="rows">
+      <label>
         Rows / Page:
       </label>
 
@@ -564,8 +591,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
           4
         </option>
 
-        <option value="5"
-                selected>
+        <option value="5" selected>
           5
         </option>
 
@@ -586,12 +612,8 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
     </div>
 
 
-    <button
-      onclick="generate()"
-    >
-
+    <button onclick="generate()">
       Generate Flashcards
-
     </button>
 
 
@@ -599,9 +621,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
       class="secondary"
       onclick="window.print()"
     >
-
       Print / Save PDF
-
     </button>
 
 
@@ -609,44 +629,45 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
       class="secondary"
       onclick="clearAll()"
     >
-
       Clear
-
     </button>
-
 
   </div>
 
 
-  <!-- ===================================================
-       INFORMATION
-       =================================================== -->
+  <!-- =====================================================
+       HINT
+       ===================================================== -->
 
   <div class="hint">
 
-    <b>A4:</b>
-    Fixed 2 × 5 layout = 10 cards/page.
+    <b>A4:</b> fixed 2 × 5 = 10 cards/page.
 
     <br>
 
-    <b>A3:</b>
-    Choose your cards per row and rows per page.
+    <b>A3:</b> choose cards per row and rows per page.
 
     <br>
 
-    <b>Printing:</b>
+    The layout is automatically centered with equal
+    margins on all four sides.
+
+    <br>
+
+    Dense layouts automatically reduce card padding
+    and font sizes to prevent overflow.
+
+    <br>
+
+    <b>Print:</b>
     Actual Size / 100% • Double-sided • Flip on long edge.
-
-    <br>
-
-    Card borders are included in the PDF/print output.
 
   </div>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        PREVIEW
-       =================================================== -->
+       ===================================================== -->
 
   <div id="preview"></div>
 
@@ -657,59 +678,44 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 <script>
 
 
-/* =====================================================
-   GLOBAL LAYOUT SETTINGS
-   ===================================================== */
-
-let currentLayout = {
-  paper: "a4",
-  columns: 2,
-  rows: 5
-};
-
-
-/* =====================================================
-   UPDATE LAYOUT CONTROLS
-   ===================================================== */
+/* =========================================================
+   UPDATE CONTROLS
+   ========================================================= */
 
 function updateLayoutControls() {
 
   const paper =
     document.getElementById("paperSize").value;
 
-
-  const a3Columns =
+  const columnsGroup =
     document.getElementById("a3ColumnsGroup");
 
-  const a3Rows =
+  const rowsGroup =
     document.getElementById("a3RowsGroup");
 
 
   if (paper === "a3") {
 
-    a3Columns.classList.remove("hidden");
+    columnsGroup.classList.remove("hidden");
 
-    a3Rows.classList.remove("hidden");
+    rowsGroup.classList.remove("hidden");
 
-  }
+  } else {
 
-  else {
+    columnsGroup.classList.add("hidden");
 
-    a3Columns.classList.add("hidden");
-
-    a3Rows.classList.add("hidden");
+    rowsGroup.classList.add("hidden");
 
   }
 
 
   generate();
-
 }
 
 
-/* =====================================================
-   GET CURRENT LAYOUT
-   ===================================================== */
+/* =========================================================
+   GET LAYOUT
+   ========================================================= */
 
 function getLayout() {
 
@@ -718,7 +724,8 @@ function getLayout() {
 
 
   /*
-    A4 is ALWAYS 2 × 5.
+    A4:
+    ALWAYS 2 × 5.
   */
 
   if (paper === "a4") {
@@ -733,7 +740,9 @@ function getLayout() {
 
       pageWidth: "210mm",
 
-      pageHeight: "297mm"
+      pageHeight: "297mm",
+
+      margin: "8mm"
 
     };
 
@@ -741,7 +750,8 @@ function getLayout() {
 
 
   /*
-    A3 is configurable.
+    A3:
+    USER CONTROLLED.
   */
 
   const columns =
@@ -749,7 +759,6 @@ function getLayout() {
       document.getElementById("columns").value,
       10
     );
-
 
   const rows =
     parseInt(
@@ -768,16 +777,126 @@ function getLayout() {
 
     pageWidth: "297mm",
 
-    pageHeight: "420mm"
+    pageHeight: "420mm",
+
+    margin: "10mm"
 
   };
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   CALCULATE TYPOGRAPHY
+
+   Automatically scales down as the grid becomes denser.
+   ========================================================= */
+
+function getCardStyle(columns, rows, paper) {
+
+  const density =
+    columns * rows;
+
+
+  /*
+    Base values.
+  */
+
+  let front = 42;
+  let kana = 28;
+  let back = 24;
+  let padding = 8;
+  let gap = 7;
+  let tokenGap = 5;
+  let creator = 9;
+  let creatorBottom = 4;
+
+
+  /*
+    A3 gets slightly larger cards
+    when the grid is sparse.
+  */
+
+  if (paper === "a3") {
+
+    front = 48;
+    kana = 32;
+    back = 26;
+    padding = 10;
+
+  }
+
+
+  /*
+    Scale according to density.
+
+    This prevents text from becoming
+    cramped when using 4×8, 5×8, etc.
+  */
+
+  if (density >= 15) {
+
+    front *= 0.82;
+    kana *= 0.82;
+    back *= 0.82;
+
+    padding = 5;
+
+    gap = 4;
+    tokenGap = 3;
+
+    creator = 7;
+
+  }
+
+  else if (density >= 20) {
+
+    front *= 0.70;
+    kana *= 0.70;
+    back *= 0.70;
+
+    padding = 4;
+
+    gap = 3;
+    tokenGap = 2;
+
+    creator = 6;
+
+  }
+
+
+  /*
+    Never let the typography
+    become absurdly large.
+  */
+
+  front = Math.max(front, 22);
+  kana = Math.max(kana, 18);
+  back = Math.max(back, 15);
+
+
+  return {
+
+    front: `${front}px`,
+    kana: `${kana}px`,
+    back: `${back}px`,
+
+    padding: `${padding}mm`,
+
+    gap: `${gap}px`,
+    tokenGap: `${tokenGap}px`,
+
+    creator: `${creator}px`,
+    creatorBottom: `${creatorBottom}mm`
+
+  };
+
+}
+
+
+/* =========================================================
    PARSE VOCABULARY
-   ===================================================== */
+   ========================================================= */
 
 function parseVocabulary(text) {
 
@@ -788,15 +907,9 @@ function parseVocabulary(text) {
     .split(/\r?\n/)
     .forEach(line => {
 
-
       if (!line.trim())
         return;
 
-
-      /*
-        Column 1 = English
-        Column 2 = everything after first TAB.
-      */
 
       const tab =
         line.indexOf("\t");
@@ -822,11 +935,6 @@ function parseVocabulary(text) {
         return;
 
 
-      /*
-        Japanese information is
-        separated by slash.
-      */
-
       const tokens =
         column2
           .split(/\s*\/\s*/)
@@ -845,8 +953,6 @@ function parseVocabulary(text) {
       tokens.forEach(t => {
 
 
-        /* Hiragana */
-
         if (
           /^[ぁ-ゖー\s・]+$/.test(t)
           && !hira
@@ -855,9 +961,6 @@ function parseVocabulary(text) {
           hira = t;
 
         }
-
-
-        /* Katakana */
 
         else if (
           /^[ァ-ヺー\s・]+$/.test(t)
@@ -868,9 +971,6 @@ function parseVocabulary(text) {
 
         }
 
-
-        /* Romaji */
-
         else if (
           /^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'・-]*$/.test(t)
           && !romaji
@@ -880,9 +980,6 @@ function parseVocabulary(text) {
 
         }
 
-
-        /* Kanji */
-
         else if (
           /[\u3400-\u9FFF\uF900-\uFAFF]/.test(t)
           && !kanji
@@ -891,9 +988,6 @@ function parseVocabulary(text) {
           kanji = t;
 
         }
-
-
-        /* Other */
 
         else {
 
@@ -929,12 +1023,11 @@ function parseVocabulary(text) {
 }
 
 
-/* =====================================================
-   GENERATE FLASHCARDS
-   ===================================================== */
+/* =========================================================
+   GENERATE
+   ========================================================= */
 
 function generate() {
-
 
   const text =
     document
@@ -943,11 +1036,13 @@ function generate() {
       .trim();
 
 
+  const preview =
+    document.getElementById("preview");
+
+
   if (!text) {
 
-    document
-      .getElementById("preview")
-      .innerHTML = "";
+    preview.innerHTML = "";
 
     return;
 
@@ -973,60 +1068,28 @@ function generate() {
     getLayout();
 
 
-  currentLayout =
-    layout;
-
-
-  /*
-    Number of cards per physical page.
-  */
-
   const cardsPerPage =
     layout.columns * layout.rows;
 
 
-  const preview =
-    document.getElementById("preview");
+  /*
+    Typography automatically scales
+    based on selected grid density.
+  */
+
+  const style =
+    getCardStyle(
+      layout.columns,
+      layout.rows,
+      layout.paper
+    );
 
 
   preview.innerHTML = "";
 
 
   /*
-    Create CSS variables for
-    exact physical layout.
-  */
-
-  const root =
-    document.documentElement;
-
-
-  root.style.setProperty(
-    "--cols",
-    layout.columns
-  );
-
-
-  root.style.setProperty(
-    "--rows",
-    layout.rows
-  );
-
-
-  root.style.setProperty(
-    "--page-width",
-    layout.pageWidth
-  );
-
-
-  root.style.setProperty(
-    "--page-height",
-    layout.pageHeight
-  );
-
-
-  /*
-    Process each physical page.
+    Generate every physical page.
   */
 
   for (
@@ -1043,100 +1106,40 @@ function generate() {
       );
 
 
-    /* =================================================
-       FRONT PAGE
-       ================================================= */
+    /* =====================================================
+       FRONT
+       ===================================================== */
 
     const front =
-      document.createElement("div");
+      createSheet(
+        layout,
+        style
+      );
 
 
-    front.className =
-      `sheet ${layout.paper}`;
+    chunk.forEach(item => {
 
-
-    /*
-      Explicitly set layout
-      on the actual sheet.
-    */
-
-    front.style.setProperty(
-      "--cols",
-      layout.columns
-    );
-
-    front.style.setProperty(
-      "--rows",
-      layout.rows
-    );
-
-    front.style.setProperty(
-      "--page-width",
-      layout.pageWidth
-    );
-
-    front.style.setProperty(
-      "--page-height",
-      layout.pageHeight
-    );
-
-
-    chunk.forEach(d => {
-
-
-      const card =
-        document.createElement("div");
-
-
-      card.className =
-        "card front";
-
-
-      card.innerHTML = `
-
-        <div class="english">
-
-          ${esc(d.english)}
-
-        </div>
-
-
-        <div class="creator">
-
-          MΛIRO
-
-        </div>
-
-      `;
-
-
-      front.appendChild(card);
+      front.appendChild(
+        createFrontCard(
+          item,
+          style
+        )
+      );
 
     });
 
 
     /*
-      Fill remaining cells.
-
-      This is important because
-      the grid must always occupy
-      the complete physical page.
+      Fill the remainder of the page.
     */
 
     while (
       front.children.length < cardsPerPage
     ) {
 
-
-      const empty =
-        document.createElement("div");
-
-
-      empty.className =
-        "card empty";
-
-
-      front.appendChild(empty);
+      front.appendChild(
+        createEmptyCard()
+      );
 
     }
 
@@ -1144,65 +1147,30 @@ function generate() {
     preview.appendChild(front);
 
 
-    /* =================================================
-       BACK PAGE
-       ================================================= */
+    /* =====================================================
+       BACK
+       ===================================================== */
 
     const back =
-      document.createElement("div");
-
-
-    back.className =
-      `sheet ${layout.paper}`;
-
-
-    back.style.setProperty(
-      "--cols",
-      layout.columns
-    );
-
-    back.style.setProperty(
-      "--rows",
-      layout.rows
-    );
-
-    back.style.setProperty(
-      "--page-width",
-      layout.pageWidth
-    );
-
-    back.style.setProperty(
-      "--page-height",
-      layout.pageHeight
-    );
+      createSheet(
+        layout,
+        style
+      );
 
 
     /*
-      Mirror each row.
+      Mirror each horizontal row.
 
-      Example 2 columns:
-
-      FRONT:
-      [1] [2]
-      [3] [4]
-      [5] [6]
-
-      BACK:
-      [2] [1]
-      [4] [3]
-      [6] [5]
+      This is correct for:
+      Double-sided
+      Flip on long edge
     */
-
-
-    const mirrored = [];
-
 
     for (
       let row = 0;
       row < layout.rows;
       row++
     ) {
-
 
       const rowStart =
         row * layout.columns;
@@ -1216,85 +1184,26 @@ function generate() {
 
 
       const rowItems =
-        chunk.slice(
-          rowStart,
-          rowEnd
+        chunk
+          .slice(
+            rowStart,
+            rowEnd
+          )
+          .reverse();
+
+
+      rowItems.forEach(item => {
+
+        back.appendChild(
+          createBackCard(
+            item,
+            style
+          )
         );
 
-
-      /*
-        Reverse the row.
-      */
-
-      rowItems.reverse();
-
-
-      mirrored.push(
-        ...rowItems
-      );
+      });
 
     }
-
-
-    mirrored.forEach(d => {
-
-
-      const card =
-        document.createElement("div");
-
-
-      card.className =
-        "card back";
-
-
-      const allTokens =
-        d.rawColumn2
-          .split(/\s*\/\s*/)
-          .map(x => x.trim())
-          .filter(Boolean);
-
-
-      card.innerHTML = `
-
-        <div class="back-content">
-
-          ${
-            allTokens
-              .map(
-                (token, index) => `
-
-                  <div
-                    class="${
-                      index === 0
-                        ? "kana"
-                        : "back-row"
-                    }"
-                  >
-
-                    ${esc(token)}
-
-                  </div>
-
-                `
-              )
-              .join("")
-          }
-
-        </div>
-
-
-        <div class="creator">
-
-          MΛIRO
-
-        </div>
-
-      `;
-
-
-      back.appendChild(card);
-
-    });
 
 
     /*
@@ -1305,16 +1214,9 @@ function generate() {
       back.children.length < cardsPerPage
     ) {
 
-
-      const empty =
-        document.createElement("div");
-
-
-      empty.className =
-        "card empty";
-
-
-      back.appendChild(empty);
+      back.appendChild(
+        createEmptyCard()
+      );
 
     }
 
@@ -1326,9 +1228,232 @@ function generate() {
 }
 
 
-/* =====================================================
+/* =========================================================
+   CREATE SHEET
+   ========================================================= */
+
+function createSheet(layout, style) {
+
+  const sheet =
+    document.createElement("div");
+
+
+  sheet.className =
+    `sheet ${layout.paper}`;
+
+
+  /*
+    Physical page dimensions.
+  */
+
+  sheet.style.setProperty(
+    "--page-width",
+    layout.pageWidth
+  );
+
+  sheet.style.setProperty(
+    "--page-height",
+    layout.pageHeight
+  );
+
+
+  /*
+    Grid dimensions.
+  */
+
+  sheet.style.setProperty(
+    "--cols",
+    layout.columns
+  );
+
+  sheet.style.setProperty(
+    "--rows",
+    layout.rows
+  );
+
+
+  /*
+    Equal margins.
+  */
+
+  sheet.style.setProperty(
+    "--margin",
+    layout.margin
+  );
+
+
+  /*
+    Typography.
+  */
+
+  sheet.style.setProperty(
+    "--front-font-size",
+    style.front
+  );
+
+  sheet.style.setProperty(
+    "--kana-font-size",
+    style.kana
+  );
+
+  sheet.style.setProperty(
+    "--back-font-size",
+    style.back
+  );
+
+  sheet.style.setProperty(
+    "--card-padding",
+    style.padding
+  );
+
+  sheet.style.setProperty(
+    "--back-gap",
+    style.gap
+  );
+
+  sheet.style.setProperty(
+    "--token-gap",
+    style.tokenGap
+  );
+
+  sheet.style.setProperty(
+    "--creator-size",
+    style.creator
+  );
+
+  sheet.style.setProperty(
+    "--creator-bottom",
+    style.creatorBottom
+  );
+
+
+  return sheet;
+
+}
+
+
+/* =========================================================
+   FRONT CARD
+   ========================================================= */
+
+function createFrontCard(item) {
+
+  const card =
+    document.createElement("div");
+
+
+  card.className =
+    "card front";
+
+
+  card.innerHTML = `
+
+    <div class="english">
+
+      ${esc(item.english)}
+
+    </div>
+
+    <div class="creator">
+
+      MΛIRO
+
+    </div>
+
+  `;
+
+
+  return card;
+
+}
+
+
+/* =========================================================
+   BACK CARD
+   ========================================================= */
+
+function createBackCard(item) {
+
+  const card =
+    document.createElement("div");
+
+
+  card.className =
+    "card back";
+
+
+  const tokens =
+    item.rawColumn2
+      .split(/\s*\/\s*/)
+      .map(x => x.trim())
+      .filter(Boolean);
+
+
+  card.innerHTML = `
+
+    <div class="back-content">
+
+      ${
+        tokens
+          .map(
+            (token, index) => `
+
+              <div
+                class="${
+                  index === 0
+                    ? "kana"
+                    : "back-row"
+                }"
+              >
+
+                ${esc(token)}
+
+              </div>
+
+            `
+          )
+          .join("")
+      }
+
+    </div>
+
+
+    <div class="creator">
+
+      MΛIRO
+
+    </div>
+
+  `;
+
+
+  return card;
+
+}
+
+
+/* =========================================================
+   EMPTY CARD
+   ========================================================= */
+
+function createEmptyCard() {
+
+  const card =
+    document.createElement("div");
+
+
+  card.className =
+    "card empty";
+
+
+  return card;
+
+}
+
+
+/* =========================================================
    CLEAR
-   ===================================================== */
+   ========================================================= */
 
 function clearAll() {
 
@@ -1344,16 +1469,16 @@ function clearAll() {
 }
 
 
-/* =====================================================
-   HTML ESCAPE
-   ===================================================== */
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
 
-function esc(s) {
+function esc(value) {
 
-  return String(s).replace(
+  return String(value).replace(
     /[&<>"']/g,
 
-    m => ({
+    char => ({
 
       "&": "&amp;",
       "<": "&lt;",
@@ -1361,21 +1486,20 @@ function esc(s) {
       '"': "&quot;",
       "'": "&#039;"
 
-    }[m])
+    }[char])
 
   );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    INITIALIZE
-   ===================================================== */
+   ========================================================= */
 
 updateLayoutControls();
 
 </script>
-
 
 </body>
 </html>
