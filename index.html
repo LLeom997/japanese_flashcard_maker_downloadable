@@ -9,7 +9,7 @@
 <style>
 
   /* =====================================================
-     DEFAULT PAGE
+     PRINT PAGE
      ===================================================== */
 
   @page {
@@ -32,6 +32,11 @@
     background: #f3f3f3;
     color: #222;
   }
+
+
+  /* =====================================================
+     APP / UI
+     ===================================================== */
 
   .app {
     max-width: 1100px;
@@ -66,6 +71,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
     margin: 12px 0;
   }
 
@@ -98,6 +104,22 @@
     border: 1px solid #bbb;
   }
 
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .control-group label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
   .hint {
     font-size: 13px;
     color: #666;
@@ -119,18 +141,31 @@
 
   /* =====================================================
      SHEET
+
+     CSS variables are controlled by JavaScript:
+
+       --cols = cards per row
+       --rows = rows per page
+       --page-width
+       --page-height
      ===================================================== */
 
   .sheet {
 
-    background: #fff;
+    width: var(--page-width);
+    height: var(--page-height);
 
     padding: 8mm;
 
+    background: #fff;
+
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns:
+      repeat(var(--cols), 1fr);
+
+    grid-template-rows:
+      repeat(var(--rows), 1fr);
 
     gap: 0;
 
@@ -139,30 +174,14 @@
     box-shadow: 0 2px 12px #bbb;
 
     border: none;
-  }
 
+    box-sizing: border-box;
 
-  /* =====================================================
-     A4
-     ===================================================== */
+    break-inside: avoid;
+    page-break-inside: avoid;
 
-  .sheet.a4 {
-
-    width: 210mm;
-    height: 297mm;
-
-  }
-
-
-  /* =====================================================
-     A3
-     ===================================================== */
-
-  .sheet.a3 {
-
-    width: 297mm;
-    height: 420mm;
-
+    break-after: page;
+    page-break-after: always;
   }
 
 
@@ -172,10 +191,8 @@
 
   .card {
 
-    /*
-      Solid card border.
-      This WILL appear in PDF and physical printing.
-    */
+    min-width: 0;
+    min-height: 0;
 
     border: 0.35mm solid #000;
 
@@ -186,13 +203,16 @@
 
     text-align: center;
 
-    padding: 10mm;
+    padding: 8mm;
 
     overflow: hidden;
 
     position: relative;
 
     background: #fff;
+
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
 
@@ -208,6 +228,9 @@
 
     line-height: 1.15;
 
+    overflow-wrap: break-word;
+
+    max-width: 100%;
   }
 
 
@@ -220,7 +243,6 @@
     flex-direction: column;
 
     gap: 7px;
-
   }
 
   .back-content {
@@ -237,6 +259,9 @@
 
     max-width: 100%;
 
+    max-height: 100%;
+
+    overflow: hidden;
   }
 
   .kana {
@@ -246,29 +271,6 @@
     font-weight: 700;
 
     line-height: 1.2;
-
-  }
-
-  .katakana {
-
-    font-size: 20px;
-
-    color: #555;
-
-  }
-
-  .romaji {
-
-    font-size: 18px;
-
-    font-style: italic;
-
-  }
-
-  .kanji {
-
-    font-size: 42px;
-
   }
 
   .back-row {
@@ -277,6 +279,7 @@
 
     line-height: 1.15;
 
+    overflow-wrap: break-word;
   }
 
 
@@ -302,7 +305,6 @@
     color: #999;
 
     font-weight: 600;
-
   }
 
 
@@ -314,13 +316,12 @@
 
     border: none !important;
 
-    background: transparent;
-
+    background: transparent !important;
   }
 
 
   /* =====================================================
-     PRINT / PDF
+     PRINT
      ===================================================== */
 
   @media print {
@@ -328,15 +329,12 @@
     html,
     body {
 
-      margin: 0;
-      padding: 0;
+      margin: 0 !important;
+      padding: 0 !important;
 
-      background: #fff;
+      background: #fff !important;
 
     }
-
-
-    /* Hide UI */
 
     .app > :not(#preview),
     h1,
@@ -346,88 +344,79 @@
 
     }
 
-
     #preview {
 
-      display: block;
+      display: block !important;
 
-      margin: 0;
-      padding: 0;
+      margin: 0 !important;
+      padding: 0 !important;
 
     }
-
-
-    /* Remove screen shadow only */
 
     .sheet {
 
-      margin: 0;
+      width: var(--page-width) !important;
+      height: var(--page-height) !important;
+
+      min-width: var(--page-width) !important;
+      max-width: var(--page-width) !important;
+
+      min-height: var(--page-height) !important;
+      max-height: var(--page-height) !important;
+
+      margin: 0 !important;
+
+      padding: 8mm !important;
+
+      display: grid !important;
+
+      grid-template-columns:
+        repeat(var(--cols), 1fr) !important;
+
+      grid-template-rows:
+        repeat(var(--rows), 1fr) !important;
+
+      gap: 0 !important;
+
+      overflow: hidden !important;
 
       box-shadow: none !important;
 
-      background: #fff !important;
-
       border: none !important;
 
-      outline: none !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
 
-      page-break-after: always;
-
-      break-after: page;
-
+      break-after: page !important;
+      page-break-after: always !important;
     }
-
 
     .sheet:last-child {
 
-      page-break-after: auto;
-
-      break-after: auto;
-
+      break-after: auto !important;
+      page-break-after: auto !important;
     }
 
-
-    /*
-      IMPORTANT:
-      Do NOT remove .card borders here.
-
-      They must remain visible in
-      printed/PDF output.
-    */
-
-
     .card {
+
+      min-width: 0 !important;
+      min-height: 0 !important;
 
       border: 0.35mm solid #000 !important;
 
       background: #fff !important;
 
-    }
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
 
+      overflow: hidden !important;
+    }
 
     .empty {
 
       border: none !important;
 
       background: transparent !important;
-
-    }
-
-
-    /* Exact physical page sizes */
-
-    .sheet.a4 {
-
-      width: 210mm;
-      height: 297mm;
-
-    }
-
-    .sheet.a3 {
-
-      width: 297mm;
-      height: 420mm;
-
     }
 
   }
@@ -443,6 +432,10 @@
 <div class="app">
 
 
+  <!-- ===================================================
+       HEADER
+       =================================================== -->
+
   <h1>
     🇯🇵 Japanese Vocabulary Flashcards
   </h1>
@@ -450,13 +443,14 @@
 
   <div class="sub">
 
-    Paste your CSV → generate double-sided flashcards → print.
+    Paste your vocabulary → generate printable
+    double-sided flashcards.
 
   </div>
 
 
   <!-- ===================================================
-       INPUT
+       VOCABULARY INPUT
        =================================================== -->
 
   <textarea
@@ -479,23 +473,122 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
   <div class="controls">
 
 
-    <select
-      id="paperSize"
-      onchange="generate()"
+    <!-- PAPER SIZE -->
+
+    <div class="control-group">
+
+      <label for="paperSize">
+        Paper:
+      </label>
+
+      <select
+        id="paperSize"
+        onchange="updateLayoutControls()"
+      >
+
+        <option value="a4">
+          A4 Portrait
+        </option>
+
+        <option value="a3">
+          A3 Portrait
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- A3 COLUMNS -->
+
+    <div
+      id="a3ColumnsGroup"
+      class="control-group hidden"
     >
 
-      <option value="a4">
-        A4 Portrait
-      </option>
+      <label for="columns">
+        Cards / Row:
+      </label>
 
-      <option value="a3">
-        A3 Portrait
-      </option>
+      <select
+        id="columns"
+        onchange="generate()"
+      >
 
-    </select>
+        <option value="2">
+          2
+        </option>
+
+        <option value="3">
+          3
+        </option>
+
+        <option value="4">
+          4
+        </option>
+
+        <option value="5">
+          5
+        </option>
+
+      </select>
+
+    </div>
 
 
-    <button onclick="generate()">
+    <!-- A3 ROWS -->
+
+    <div
+      id="a3RowsGroup"
+      class="control-group hidden"
+    >
+
+      <label for="rows">
+        Rows / Page:
+      </label>
+
+      <select
+        id="rows"
+        onchange="generate()"
+      >
+
+        <option value="2">
+          2
+        </option>
+
+        <option value="3">
+          3
+        </option>
+
+        <option value="4">
+          4
+        </option>
+
+        <option value="5"
+                selected>
+          5
+        </option>
+
+        <option value="6">
+          6
+        </option>
+
+        <option value="7">
+          7
+        </option>
+
+        <option value="8">
+          8
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      onclick="generate()"
+    >
 
       Generate Flashcards
 
@@ -514,10 +607,7 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
     <button
       class="secondary"
-      onclick="
-        document.getElementById('csv').value='';
-        document.getElementById('preview').innerHTML=''
-      "
+      onclick="clearAll()"
     >
 
       Clear
@@ -529,29 +619,27 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
 
   <!-- ===================================================
-       PRINT INSTRUCTIONS
+       INFORMATION
        =================================================== -->
 
   <div class="hint">
 
-    Paste
-    <b>English[TAB]Japanese / Japanese / Romaji</b>,
-    one item per line.
+    <b>A4:</b>
+    Fixed 2 × 5 layout = 10 cards/page.
 
     <br>
 
-    <b>A4:</b> 210 × 297 mm
-    &nbsp; | &nbsp;
-    <b>A3:</b> 297 × 420 mm
+    <b>A3:</b>
+    Choose your cards per row and rows per page.
 
     <br>
 
-    Print:
-    <b>
-      Actual Size / 100%
-      • Double-sided
-      • Flip on long edge
-    </b>
+    <b>Printing:</b>
+    Actual Size / 100% • Double-sided • Flip on long edge.
+
+    <br>
+
+    Card borders are included in the PDF/print output.
 
   </div>
 
@@ -570,6 +658,124 @@ English<TAB>Hiragana / Katakana / Kanji / Romaji"
 
 
 /* =====================================================
+   GLOBAL LAYOUT SETTINGS
+   ===================================================== */
+
+let currentLayout = {
+  paper: "a4",
+  columns: 2,
+  rows: 5
+};
+
+
+/* =====================================================
+   UPDATE LAYOUT CONTROLS
+   ===================================================== */
+
+function updateLayoutControls() {
+
+  const paper =
+    document.getElementById("paperSize").value;
+
+
+  const a3Columns =
+    document.getElementById("a3ColumnsGroup");
+
+  const a3Rows =
+    document.getElementById("a3RowsGroup");
+
+
+  if (paper === "a3") {
+
+    a3Columns.classList.remove("hidden");
+
+    a3Rows.classList.remove("hidden");
+
+  }
+
+  else {
+
+    a3Columns.classList.add("hidden");
+
+    a3Rows.classList.add("hidden");
+
+  }
+
+
+  generate();
+
+}
+
+
+/* =====================================================
+   GET CURRENT LAYOUT
+   ===================================================== */
+
+function getLayout() {
+
+  const paper =
+    document.getElementById("paperSize").value;
+
+
+  /*
+    A4 is ALWAYS 2 × 5.
+  */
+
+  if (paper === "a4") {
+
+    return {
+
+      paper: "a4",
+
+      columns: 2,
+
+      rows: 5,
+
+      pageWidth: "210mm",
+
+      pageHeight: "297mm"
+
+    };
+
+  }
+
+
+  /*
+    A3 is configurable.
+  */
+
+  const columns =
+    parseInt(
+      document.getElementById("columns").value,
+      10
+    );
+
+
+  const rows =
+    parseInt(
+      document.getElementById("rows").value,
+      10
+    );
+
+
+  return {
+
+    paper: "a3",
+
+    columns,
+
+    rows,
+
+    pageWidth: "297mm",
+
+    pageHeight: "420mm"
+
+  };
+
+}
+
+
+/* =====================================================
    PARSE VOCABULARY
    ===================================================== */
 
@@ -582,19 +788,22 @@ function parseVocabulary(text) {
     .split(/\r?\n/)
     .forEach(line => {
 
-      if (!line.trim()) return;
+
+      if (!line.trim())
+        return;
 
 
       /*
         Column 1 = English
-        Column 2 = everything after first TAB
+        Column 2 = everything after first TAB.
       */
 
       const tab =
         line.indexOf("\t");
 
 
-      if (tab < 0) return;
+      if (tab < 0)
+        return;
 
 
       const englishRaw =
@@ -614,8 +823,8 @@ function parseVocabulary(text) {
 
 
       /*
-        Split Japanese information
-        using slash.
+        Japanese information is
+        separated by slash.
       */
 
       const tokens =
@@ -684,7 +893,7 @@ function parseVocabulary(text) {
         }
 
 
-        /* Anything else */
+        /* Other */
 
         else {
 
@@ -721,7 +930,7 @@ function parseVocabulary(text) {
 
 
 /* =====================================================
-   GENERATE
+   GENERATE FLASHCARDS
    ===================================================== */
 
 function generate() {
@@ -736,9 +945,9 @@ function generate() {
 
   if (!text) {
 
-    alert(
-      "Paste your vocabulary first."
-    );
+    document
+      .getElementById("preview")
+      .innerHTML = "";
 
     return;
 
@@ -752,7 +961,7 @@ function generate() {
   if (!data.length) {
 
     alert(
-      "No vocabulary found. Use: English<TAB>Hiragana / Kanji / Romaji"
+      "No vocabulary found.\n\nUse:\nEnglish<TAB>Hiragana / Kanji / Romaji"
     );
 
     return;
@@ -760,40 +969,82 @@ function generate() {
   }
 
 
+  const layout =
+    getLayout();
+
+
+  currentLayout =
+    layout;
+
+
+  /*
+    Number of cards per physical page.
+  */
+
+  const cardsPerPage =
+    layout.columns * layout.rows;
+
+
   const preview =
     document.getElementById("preview");
-
-
-  const paperSize =
-    document.getElementById("paperSize").value;
 
 
   preview.innerHTML = "";
 
 
   /*
-    10 cards per sheet:
-
-    2 columns × 5 rows
+    Create CSS variables for
+    exact physical layout.
   */
 
+  const root =
+    document.documentElement;
+
+
+  root.style.setProperty(
+    "--cols",
+    layout.columns
+  );
+
+
+  root.style.setProperty(
+    "--rows",
+    layout.rows
+  );
+
+
+  root.style.setProperty(
+    "--page-width",
+    layout.pageWidth
+  );
+
+
+  root.style.setProperty(
+    "--page-height",
+    layout.pageHeight
+  );
+
+
+  /*
+    Process each physical page.
+  */
 
   for (
     let start = 0;
     start < data.length;
-    start += 10
+    start += cardsPerPage
   ) {
 
 
     const chunk =
       data.slice(
         start,
-        start + 10
+        start + cardsPerPage
       );
 
 
     /* =================================================
-       FRONT SHEET
+       FRONT PAGE
        ================================================= */
 
     const front =
@@ -801,21 +1052,47 @@ function generate() {
 
 
     front.className =
-      `sheet ${paperSize}`;
+      `sheet ${layout.paper}`;
+
+
+    /*
+      Explicitly set layout
+      on the actual sheet.
+    */
+
+    front.style.setProperty(
+      "--cols",
+      layout.columns
+    );
+
+    front.style.setProperty(
+      "--rows",
+      layout.rows
+    );
+
+    front.style.setProperty(
+      "--page-width",
+      layout.pageWidth
+    );
+
+    front.style.setProperty(
+      "--page-height",
+      layout.pageHeight
+    );
 
 
     chunk.forEach(d => {
 
 
-      const c =
+      const card =
         document.createElement("div");
 
 
-      c.className =
+      card.className =
         "card front";
 
 
-      c.innerHTML = `
+      card.innerHTML = `
 
         <div class="english">
 
@@ -833,30 +1110,33 @@ function generate() {
       `;
 
 
-      front.appendChild(c);
-
+      front.appendChild(card);
 
     });
 
 
     /*
-      Fill unused cells.
+      Fill remaining cells.
+
+      This is important because
+      the grid must always occupy
+      the complete physical page.
     */
 
     while (
-      front.children.length < 10
+      front.children.length < cardsPerPage
     ) {
 
 
-      const e =
+      const empty =
         document.createElement("div");
 
 
-      e.className =
+      empty.className =
         "card empty";
 
 
-      front.appendChild(e);
+      front.appendChild(empty);
 
     }
 
@@ -865,7 +1145,7 @@ function generate() {
 
 
     /* =================================================
-       BACK SHEET
+       BACK PAGE
        ================================================= */
 
     const back =
@@ -873,62 +1153,85 @@ function generate() {
 
 
     back.className =
-      `sheet ${paperSize}`;
+      `sheet ${layout.paper}`;
+
+
+    back.style.setProperty(
+      "--cols",
+      layout.columns
+    );
+
+    back.style.setProperty(
+      "--rows",
+      layout.rows
+    );
+
+    back.style.setProperty(
+      "--page-width",
+      layout.pageWidth
+    );
+
+    back.style.setProperty(
+      "--page-height",
+      layout.pageHeight
+    );
 
 
     /*
-      Mirror each 2-column row.
+      Mirror each row.
+
+      Example 2 columns:
 
       FRONT:
-
-      [ 1 ] [ 2 ]
-      [ 3 ] [ 4 ]
-      [ 5 ] [ 6 ]
-      [ 7 ] [ 8 ]
-      [ 9 ] [10]
-
+      [1] [2]
+      [3] [4]
+      [5] [6]
 
       BACK:
-
-      [ 2 ] [ 1 ]
-      [ 4 ] [ 3 ]
-      [ 6 ] [ 5 ]
-      [ 8 ] [ 7 ]
-      [10 ] [ 9 ]
-
-      This keeps the cards aligned
-      when duplex printing on the
-      long edge.
+      [2] [1]
+      [4] [3]
+      [6] [5]
     */
+
 
     const mirrored = [];
 
 
     for (
-      let i = 0;
-      i < chunk.length;
-      i += 2
+      let row = 0;
+      row < layout.rows;
+      row++
     ) {
 
 
-      if (
-        i + 1 < chunk.length
-      ) {
+      const rowStart =
+        row * layout.columns;
 
-        mirrored.push(
-          chunk[i + 1],
-          chunk[i]
+
+      const rowEnd =
+        Math.min(
+          rowStart + layout.columns,
+          chunk.length
         );
 
-      }
 
-      else {
-
-        mirrored.push(
-          chunk[i]
+      const rowItems =
+        chunk.slice(
+          rowStart,
+          rowEnd
         );
 
-      }
+
+      /*
+        Reverse the row.
+      */
+
+      rowItems.reverse();
+
+
+      mirrored.push(
+        ...rowItems
+      );
 
     }
 
@@ -936,18 +1239,13 @@ function generate() {
     mirrored.forEach(d => {
 
 
-      const c =
+      const card =
         document.createElement("div");
 
 
-      c.className =
+      card.className =
         "card back";
 
-
-      /*
-        Preserve every slash-separated
-        Japanese token.
-      */
 
       const allTokens =
         d.rawColumn2
@@ -956,24 +1254,24 @@ function generate() {
           .filter(Boolean);
 
 
-      c.innerHTML = `
+      card.innerHTML = `
 
         <div class="back-content">
 
           ${
             allTokens
               .map(
-                (t, i) => `
+                (token, index) => `
 
                   <div
                     class="${
-                      i === 0
+                      index === 0
                         ? "kana"
                         : "back-row"
                     }"
                   >
 
-                    ${esc(t)}
+                    ${esc(token)}
 
                   </div>
 
@@ -994,30 +1292,29 @@ function generate() {
       `;
 
 
-      back.appendChild(c);
-
+      back.appendChild(card);
 
     });
 
 
     /*
-      Fill unused cells.
+      Fill remaining cells.
     */
 
     while (
-      back.children.length < 10
+      back.children.length < cardsPerPage
     ) {
 
 
-      const e =
+      const empty =
         document.createElement("div");
 
 
-      e.className =
+      empty.className =
         "card empty";
 
 
-      back.appendChild(e);
+      back.appendChild(empty);
 
     }
 
@@ -1025,6 +1322,24 @@ function generate() {
     preview.appendChild(back);
 
   }
+
+}
+
+
+/* =====================================================
+   CLEAR
+   ===================================================== */
+
+function clearAll() {
+
+  document
+    .getElementById("csv")
+    .value = "";
+
+
+  document
+    .getElementById("preview")
+    .innerHTML = "";
 
 }
 
@@ -1051,6 +1366,13 @@ function esc(s) {
   );
 
 }
+
+
+/* =====================================================
+   INITIALIZE
+   ===================================================== */
+
+updateLayoutControls();
 
 </script>
 
