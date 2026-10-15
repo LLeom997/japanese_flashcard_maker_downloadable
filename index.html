@@ -256,14 +256,14 @@ select {
 
   flex-direction: column;
 
-  padding: 18px;
+  padding: 5px;
 }
 
 .preview-english {
 
   color: #000 !important;
 
-  font-size: 30px;
+  font-size: 36px;
 
   font-weight: 700;
 
@@ -285,9 +285,9 @@ select {
 
   flex-direction: column;
 
-  padding: 14px;
+  padding: 4px;
 
-  gap: 5px;
+  gap: 3px;
 }
 
 .back-content {
@@ -300,9 +300,9 @@ select {
 
   justify-content: center;
 
-  gap: 4px;
+  gap: 2px;
 
-  max-width: 90%;
+  max-width: 96%;
 
   color: #000 !important;
 }
@@ -311,7 +311,7 @@ select {
 
   color: #000 !important;
 
-  font-size: 25px;
+  font-size: 30px;
 
   font-weight: 700;
 
@@ -326,7 +326,7 @@ select {
 
   color: #000 !important;
 
-  font-size: 17px;
+  font-size: 21px;
 
   font-weight: 400;
 
@@ -355,9 +355,9 @@ select {
 
   text-align: center;
 
-  font-size: 8px;
+  font-size: 7px;
 
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 
   font-weight: 600;
 }
@@ -422,7 +422,8 @@ select {
 
 </style>
 
-</head>
+<script type="text/javascript" nonce="c725ff8097214844903e6b1417d" src="//local.adguard.org?ts=1792065175416&amp;type=content-script&amp;dmn=chatgpt.com&amp;app=chrome.exe&amp;css=1&amp;js=1&amp;gcss=1&amp;rel=1&amp;rji=1&amp;sbe=0"></script>
+<script type="text/javascript" nonce="c725ff8097214844903e6b1417d" src="//local.adguard.org?ts=1792065175416&amp;name=AdGuard%20Popup%20Blocker&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head>
 
 
 <body>
@@ -500,7 +501,7 @@ The Japanese tokens appear on the BACK.
         A4 Portrait
       </option>
 
-      <option value="a3">
+      <option value="a3" selected>
         A3 Portrait
       </option>
 
@@ -527,7 +528,7 @@ The Japanese tokens appear on the BACK.
         2
       </option>
 
-      <option value="3">
+      <option value="3" selected>
         3
       </option>
 
@@ -562,7 +563,7 @@ The Japanese tokens appear on the BACK.
         2
       </option>
 
-      <option value="3">
+      <option value="3" selected>
         3
       </option>
 
@@ -570,7 +571,7 @@ The Japanese tokens appear on the BACK.
         4
       </option>
 
-      <option value="5" selected>
+      <option value="5">
         5
       </option>
 
@@ -582,7 +583,7 @@ The Japanese tokens appear on the BACK.
         7
       </option>
 
-      <option value="8">
+      <option value="8" selected>
         8
       </option>
 
@@ -630,8 +631,8 @@ The Japanese tokens appear on the BACK.
 
   <br>
 
-  <b>A3:</b>
-  Choose cards per row and rows per page.
+  <b>A3 default:</b>
+  3 × 8 = 24 cards per page, each 90 × 49 mm (standard visiting-card format).
 
   <br>
 
@@ -641,7 +642,7 @@ The Japanese tokens appear on the BACK.
   <br>
 
   <b>Duplex:</b>
-  Print double-sided and flip on the long edge.
+  Print double-sided and flip on the long edge. For accurate sizing, print at 100% / Actual Size.
 
 </div>
 
@@ -770,7 +771,12 @@ function getLayout() {
           .getElementById("rows")
           .value,
         10
-      )
+      ),
+
+    cardWidthMM: 90,
+    cardHeightMM: 49,
+    marginXMM: 13.5,
+    marginYMM: 14
 
   };
 
@@ -881,20 +887,20 @@ function getPDFFonts(
 
   let english =
     paper === "a4"
-      ? 115
-      : 125;
+      ? 135
+      : 170;
 
 
   let japanese =
     paper === "a4"
-      ? 75
-      : 90;
+      ? 95
+      : 125;
 
 
   let secondary =
     paper === "a4"
-      ? 52
-      : 60;
+      ? 68
+      : 82;
 
 
   if (density >= 15) {
@@ -1193,12 +1199,19 @@ function createPreviewPage(
     "preview-grid";
 
 
-  grid.style.gridTemplateColumns =
-    `repeat(${layout.columns}, 1fr)`;
-
-
-  grid.style.gridTemplateRows =
-    `repeat(${layout.rows}, 1fr)`;
+  if (layout.paper === "a3") {
+    grid.style.width = `${layout.columns * layout.cardWidthMM}mm`;
+    grid.style.height = `${layout.rows * layout.cardHeightMM}mm`;
+    grid.style.margin = "auto";
+    grid.style.gridTemplateColumns = `repeat(${layout.columns}, ${layout.cardWidthMM}mm)`;
+    grid.style.gridTemplateRows = `repeat(${layout.rows}, ${layout.cardHeightMM}mm)`;
+    page.style.display = "flex";
+    page.style.alignItems = "center";
+    page.style.justifyContent = "center";
+  } else {
+    grid.style.gridTemplateColumns = `repeat(${layout.columns}, 1fr)`;
+    grid.style.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
+  }
 
 
   page.appendChild(
@@ -1572,13 +1585,27 @@ function drawFrontPDF(
 
 
   const cardWidth =
-    canvas.width /
-    layout.columns;
+    layout.paper === "a3"
+      ? canvas.width * (layout.cardWidthMM / layout.widthMM)
+      : canvas.width / layout.columns;
 
 
   const cardHeight =
-    canvas.height /
-    layout.rows;
+    layout.paper === "a3"
+      ? canvas.height * (layout.cardHeightMM / layout.heightMM)
+      : canvas.height / layout.rows;
+
+
+  const offsetX =
+    layout.paper === "a3"
+      ? canvas.width * (layout.marginXMM / layout.widthMM)
+      : 0;
+
+
+  const offsetY =
+    layout.paper === "a3"
+      ? canvas.height * (layout.marginYMM / layout.heightMM)
+      : 0;
 
 
   const fonts =
@@ -1614,13 +1641,11 @@ function drawFrontPDF(
 
 
     const x =
-      col *
-      cardWidth;
+      offsetX + col * cardWidth;
 
 
     const y =
-      row *
-      cardHeight;
+      offsetY + row * cardHeight;
 
 
     drawPDFBorder(
@@ -1652,7 +1677,7 @@ function drawFrontPDF(
       y +
       cardHeight / 2,
 
-      cardWidth * 0.88,
+      cardWidth * 0.96,
 
       fonts.english,
 
@@ -1727,13 +1752,27 @@ function drawBackPDF(
 
 
   const cardWidth =
-    canvas.width /
-    layout.columns;
+    layout.paper === "a3"
+      ? canvas.width * (layout.cardWidthMM / layout.widthMM)
+      : canvas.width / layout.columns;
 
 
   const cardHeight =
-    canvas.height /
-    layout.rows;
+    layout.paper === "a3"
+      ? canvas.height * (layout.cardHeightMM / layout.heightMM)
+      : canvas.height / layout.rows;
+
+
+  const offsetX =
+    layout.paper === "a3"
+      ? canvas.width * (layout.marginXMM / layout.widthMM)
+      : 0;
+
+
+  const offsetY =
+    layout.paper === "a3"
+      ? canvas.height * (layout.marginYMM / layout.heightMM)
+      : 0;
 
 
   const fonts =
@@ -1791,13 +1830,11 @@ function drawBackPDF(
 
 
     const x =
-      col *
-      cardWidth;
+      offsetX + col * cardWidth;
 
 
     const y =
-      row *
-      cardHeight;
+      offsetY + row * cardHeight;
 
 
     drawPDFBorder(
@@ -1831,7 +1868,7 @@ function drawBackPDF(
       cardHeight / 2 -
       fonts.japanese * 0.4,
 
-      cardWidth * 0.88,
+      cardWidth * 0.96,
 
       fonts.japanese,
 
@@ -1860,7 +1897,7 @@ function drawBackPDF(
         cardHeight / 2 +
         fonts.secondary * 0.95,
 
-        cardWidth * 0.88,
+        cardWidth * 0.96,
 
         fonts.secondary,
 
